@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EdgeOS — Swing Trading Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   EdgeOS Swing Trading Playbook — Design System
+   Three tiers: Career · Intermediate · Turtle
+   Finviz-faithful · IBM Plex · Desktop-first · App-shell
+   Research-backed · Institutionally formatted
+═══════════════════════════════════════════════════════════════ */
+:root{--font:'IBM Plex Sans',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace}
+
+[data-theme="light"]{
+  --bg:#f3f3f3;--panel:#ffffff;--panel2:#ebebeb;--panel3:#dcdcdc;
+  --hover:#ffffcc;--border:#cccccc;--border-l:#e4e4e4;
+  --text:#111111;--text2:#333333;--muted:#666666;--dim:#999999;
+  --green:#1a6e1a;--green-bg:#e8f5e9;
+  --blue:#0050b3;--blue-bg:#dceeff;
+  --amber:#8a6000;--amber-bg:#fffacd;
+  --red:#bb0000;--red-bg:#ffebee;
+  --teal:#005a5a;--teal-bg:#e0f5f5;
+  --topbar:#1a1a2e;--topbar-bd:#0050b3;
+  --chip-bg:#f0f0f0;--chip-bd:#c8c8c8;--chip-tx:#1a6e1a;
+  --chip-h:#ffffcc;--chip-hbd:#0050b3;--chip-htx:#0050b3;
+  --fn-bg:#f4f8ff;--fn-bd:#0050b3;
+  --code-bg:#f0f0f0;--code-tx:#0050b3;
+  --shadow:0 1px 2px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.05);
+  /* tier colours — light backgrounds only */
+  --career-c:#1a6e1a;--career-bg:#e8f5e9;--career-bd:#1a6e1a;
+  --inter-c:#0050b3;--inter-bg:#dceeff;--inter-bd:#0050b3;
+  --turtle-c:#8a6000;--turtle-bg:#fffacd;--turtle-bd:#8a6000;
+  /* component backgrounds — ALL must be light in light mode */
+  --hero-bg:#f0f4ff;--hero-bd:#b8c8e8;
+  --loop-bg:#f4f8ff;--loop-hd-bg:#dceeff;--loop-bd:#b0c8e8;
+  --ref-bg:#f0fff4;--ref-bd:#b8ddc8;
+  --warn-bg:#fffaed;--warn-bd:#e8cc80;
+  --toast-bg:#f0fff0;
+}
+[data-theme="dark"]{
+  --bg:#0d1117;--panel:#161b22;--panel2:#1c2128;--panel3:#21262d;
+  --hover:#21262d;--border:#30363d;--border-l:#1f262d;
+  --text:#e6edf3;--text2:#c9d1d9;--muted:#8b949e;--dim:#484f58;
+  --green:#3fb950;--green-bg:#0d2c1a;
+  --blue:#58a6ff;--blue-bg:#0d2240;
+  --amber:#e3b341;--amber-bg:#3d2f0a;
+  --red:#f85149;--red-bg:#3d1515;
+  --teal:#1eb8b8;--teal-bg:#0a2020;
+  --topbar:#010409;--topbar-bd:#1a4a90;
+  --chip-bg:#1c2128;--chip-bd:#30363d;--chip-tx:#3fb950;
+  --chip-h:#21262d;--chip-hbd:#58a6ff;--chip-htx:#58a6ff;
+  --fn-bg:#080f1c;--fn-bd:#58a6ff;
+  --code-bg:#1c2128;--code-tx:#58a6ff;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.3);
+  --career-c:#3fb950;--career-bg:#0d2c1a;--career-bd:#3fb950;
+  --inter-c:#58a6ff;--inter-bg:#0d2240;--inter-bd:#58a6ff;
+  --turtle-c:#e3b341;--turtle-bg:#3d2f0a;--turtle-bd:#e3b341;
+  --hero-bg:#141c30;--hero-bd:#1a4a90;
+  --loop-bg:#0a1020;--loop-hd-bg:#0d2240;--loop-bd:#1a3a60;
+  --ref-bg:#0a1c0a;--ref-bd:#1a4a2a;
+  --warn-bg:#1c1000;--warn-bd:#4a3000;
+  --toast-bg:#162a16;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;transition:background .2s,color .2s}
+strong{font-weight:600}
+code{font-family:var(--mono);font-size:11.5px;color:var(--blue);background:var(--blue-bg);padding:1px 5px;border-radius:3px}
+pre{font-family:var(--mono);font-size:11.5px;line-height:1.8;white-space:pre-wrap}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ── APP SHELL ──────────────────────────────────────── */
+.shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.content-row{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* ── TOPBAR ─────────────────────────────────────────── */
+.topbar{
+  flex-shrink:0;height:50px;
+  background:var(--topbar);border-bottom:2px solid var(--topbar-bd);
+  display:flex;align-items:center;gap:10px;padding:0 16px;overflow:hidden;
+}
+.logo{font-family:var(--mono);font-size:14px;font-weight:700;color:#4da6ff;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.logo em{font-style:normal;font-size:9px;color:#7fcfff;letter-spacing:.14em;margin-left:8px;opacity:.7}
+.tab-nav{display:flex;gap:2px;flex-shrink:0}
+.tab-btn{
+  padding:6px 14px;border-radius:5px;border:1px solid transparent;
+  background:none;cursor:pointer;font-family:var(--font);font-size:12px;font-weight:500;
+  color:rgba(255,255,255,.5);white-space:nowrap;transition:all .14s;
+}
+.tab-btn:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.08)}
+.tab-btn.active{font-weight:700;border-color:rgba(255,255,255,.25)}
+.tab-btn.t-career.active{color:#7fff8a;background:rgba(63,185,80,.22);border-color:rgba(63,185,80,.4)}
+.tab-btn.t-inter.active{color:#9fcfff;background:rgba(88,166,255,.22);border-color:rgba(88,166,255,.4)}
+.tab-btn.t-turtle.active{color:#ffe48a;background:rgba(227,179,65,.22);border-color:rgba(227,179,65,.4)}
+.tab-btn.t-ref.active{color:#c0c0c0;background:rgba(180,180,180,.12);border-color:rgba(180,180,180,.2)}
+
+.search-wrap{flex:1;max-width:320px;min-width:140px;position:relative}
+.search{width:100%;padding:6px 26px 6px 26px;border:1px solid rgba(255,255,255,.15);border-radius:4px;background:rgba(255,255,255,.07);color:#e6edf3;font-size:12px;font-family:var(--font);outline:none;transition:border-color .15s}
+.search:focus{border-color:#4da6ff}
+.search::placeholder{color:rgba(255,255,255,.28)}
+.si{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);font-size:12px;pointer-events:none}
+.sc{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.45);font-size:13px;display:none;cursor:pointer;padding:2px 3px;line-height:1}
+.topbar-right{display:flex;align-items:center;gap:7px;flex-shrink:0;margin-left:auto}
+.tb-pill{padding:2px 8px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:.06em;font-family:var(--mono);text-transform:uppercase;border:1px solid;flex-shrink:0}
+.pill-g{color:#3fb950;border-color:#3fb950;background:rgba(63,185,80,.12)}
+.pill-b{color:#4da6ff;border-color:#4da6ff;background:rgba(77,166,255,.12)}
+.pill-a{color:#e3b341;border-color:#e3b341;background:rgba(227,179,65,.12)}
+.tbtn{padding:5px 10px;background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);border-radius:4px;cursor:pointer;font-size:10px;font-family:var(--mono);white-space:nowrap;transition:all .15s}
+.tbtn:hover{border-color:#4da6ff;color:#4da6ff}
+
+/* ── SIDEBAR ─────────────────────────────────────────── */
+.sidebar{flex-shrink:0;width:220px;background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;padding:6px 0 32px}
+.sb-sec{padding:6px 12px 3px;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-family:var(--mono);margin-top:4px}
+.sb-item{display:flex;align-items:flex-start;gap:6px;padding:5px 12px;font-size:12px;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .1s;line-height:1.4}
+.sb-item:hover{background:var(--hover);color:var(--text)}
+.sb-item.active{border-left-color:var(--sb-c,var(--blue));background:var(--blue-bg);color:var(--sb-c,var(--blue));font-weight:500}
+.sb-item-num{font-family:var(--mono);font-size:10px;color:var(--dim);flex-shrink:0;min-width:22px;padding-top:1px}
+.sb-sep{height:1px;background:var(--border-l);margin:6px 12px}
+
+/* ── MAIN PANE ───────────────────────────────────────── */
+.main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
+.tab-panel{display:none;padding:20px 24px 80px}
+.tab-panel.active{display:block}
+mark.hl{background:#fff59d;color:#111;border-radius:2px;padding:0 1px}
+[data-theme="dark"] mark.hl{background:#5a4a00;color:#ffe082}
+
+/* ── TOAST ───────────────────────────────────────────── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--toast-bg);border:1px solid var(--green);color:var(--green);padding:7px 14px;border-radius:5px;font-family:var(--mono);font-size:12px;opacity:0;transform:translateY(6px);transition:opacity .18s,transform .18s;pointer-events:none;z-index:9999}
+[data-theme="light"] .toast{}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ══════════════════════════════════════════════════════
+   TIER BADGES & COLOUR SYSTEM
+══════════════════════════════════════════════════════ */
+.tier-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:4px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border:1px solid;flex-shrink:0}
+.tb-career{color:var(--career-c);background:var(--career-bg);border-color:var(--career-bd)}
+.tb-inter{color:var(--inter-c);background:var(--inter-bg);border-color:var(--inter-bd)}
+.tb-turtle{color:var(--turtle-c);background:var(--turtle-bg);border-color:var(--turtle-bd)}
+
+/* ══════════════════════════════════════════════════════
+   PLAYBOOK PAGE COMPONENTS
+══════════════════════════════════════════════════════ */
+
+/* Hero intro */
+.pb-hero{background:var(--hero-bg);border:1px solid var(--hero-bd);border-radius:8px;padding:20px 24px;margin-bottom:20px}
+[data-theme="light"] .pb-hero{background:linear-gradient(135deg,#e8f0ff,#eef2ff);border-color:#c0cce8}
+.pb-hero-title{font-family:var(--mono);font-size:16px;font-weight:700;color:#7fcfff;margin-bottom:8px}
+[data-theme="light"] .pb-hero-title{color:#003a80}
+.pb-hero-sub{font-size:13px;color:#9ab0c8;line-height:1.75;margin-bottom:12px}
+[data-theme="light"] .pb-hero-sub{color:#3a4a5a}
+.pb-hero-pills{display:flex;flex-wrap:wrap;gap:7px}
+
+/* Section headers */
+.pb-sec{margin-bottom:24px}
+.pb-sec-hdr{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--panel2);border:1px solid var(--border);border-radius:6px 6px 0 0;border-left:4px solid}
+.pb-sec-num{font-family:var(--mono);font-size:10px;color:var(--dim);flex-shrink:0}
+.pb-sec-title{font-size:14px;font-weight:700;color:var(--text)}
+.pb-sec-meta{font-size:10px;color:var(--dim);font-family:var(--mono);margin-left:auto;white-space:nowrap}
+.pb-sec-body{background:var(--panel);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden}
+
+/* Research citation block */
+.research-block{margin:14px 0;padding:12px 16px;background:var(--panel2);border:1px solid var(--border-l);border-left:3px solid var(--green);border-radius:0 5px 5px 0}
+[data-theme="dark"] .research-block{background:#0a1c0a}
+.rb-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rb-tag{padding:1px 7px;border-radius:3px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.07em;background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
+.rb-cite{font-family:var(--mono);font-size:10.5px;color:var(--muted);font-style:italic}
+.rb-finding{font-size:12.5px;color:var(--text2);line-height:1.7;margin-bottom:5px}
+.rb-impl{font-size:12px;color:var(--muted);border-top:1px dashed var(--border-l);padding-top:5px;margin-top:5px}
+.rb-impl strong{color:var(--green)}
+
+/* Process loop */
+.process-loop{margin:14px 0;background:var(--panel);border:1px solid var(--loop-bd);border-radius:6px;overflow:hidden}
+[data-theme="dark"] .process-loop{background:#0a1020}
+.pl-header{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--loop-hd-bg);border-bottom:1px solid var(--loop-bd)}
+.pl-icon{font-size:16px;flex-shrink:0}
+.pl-title{font-size:12px;font-weight:700;color:var(--blue);font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em}
+.pl-freq{font-size:10px;color:var(--muted);margin-left:auto;font-family:var(--mono);border:1px solid var(--border);border-radius:3px;padding:1px 6px}
+.pl-steps{padding:0}
+.pl-step{display:grid;grid-template-columns:32px 1fr;border-bottom:1px solid var(--border-l)}
+.pl-step:last-child{border-bottom:none}
+.pl-step-num{padding:10px 0 10px 12px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--blue)}
+.pl-step-body{padding:10px 16px 10px 10px}
+.pl-step-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:3px}
+.pl-step-detail{font-size:12px;color:var(--text2);line-height:1.65}
+.pl-step-eos{margin-top:5px;font-family:var(--mono);font-size:11px;color:var(--green);background:var(--green-bg);padding:4px 9px;border-radius:3px;border:1px solid var(--green-bg);display:inline-block}
+[data-theme="dark"] .pl-step-eos{background:rgba(63,185,80,.1);border-color:rgba(63,185,80,.25)}
+
+/* Decision trees */
+.decision-tree{margin:14px 0;border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--panel)}
+.dt-header{padding:8px 16px;background:var(--panel2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-family:var(--mono);border-bottom:1px solid var(--border-l)}
+.dt-body{padding:12px 16px}
+.dt-node{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.dt-node:last-child{margin-bottom:0}
+.dt-q{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px}
+.dt-q-y{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
+.dt-q-n{background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
+.dt-q-i{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber)}
+.dt-q-q{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue)}
+.dt-txt{font-size:12.5px;color:var(--text2);line-height:1.65}
+.dt-txt strong{color:var(--text)}
+.dt-indent{margin-left:30px;border-left:2px solid var(--border-l);padding-left:12px;margin-top:4px}
+
+/* Conviction calculator */
+.conv-calc{background:var(--panel2);border:1px solid var(--border);border-radius:5px;overflow:hidden;margin:14px 0}
+.cc-title{padding:7px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);font-family:var(--mono);border-bottom:1px solid var(--border-l);background:var(--blue-bg)}
+.cc-rows{display:grid;grid-template-columns:140px 1fr 100px 1fr;background:var(--border);gap:1px}
+.cc-hdr{padding:6px 12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);background:var(--panel2);font-family:var(--mono)}
+.cc-cell{padding:9px 12px;background:var(--panel);font-size:12.5px;vertical-align:top}
+.cc-cell:hover{background:var(--hover)}
+.cc-signal{font-weight:600;color:var(--text)}
+.cc-lines{color:var(--blue);font-family:var(--mono);font-size:11.5px}
+.cc-size{font-weight:700}
+.cc-size-s{color:var(--muted)}
+.cc-size-m{color:var(--blue)}
+.cc-size-h{color:var(--green)}
+.cc-size-x{color:var(--amber);font-size:13px}
+
+/* Sizing formula */
+.formula-block{margin:14px 0;padding:14px 16px;background:var(--panel2);border:1px solid var(--border);border-radius:5px}
+.formula-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-family:var(--mono);margin-bottom:10px}
+.formula{display:block;font-family:var(--mono);font-size:13px;color:var(--text);text-align:center;padding:10px;background:var(--panel);border:1px solid var(--border);border-radius:4px;margin-bottom:10px}
+.formula-eg{font-size:12px;color:var(--text2);line-height:1.7}
+.formula-eg strong{color:var(--text)}
+.fe-code{font-family:var(--mono);color:var(--amber)}
+
+/* Warning / caution blocks */
+.caution-block{margin:14px 0;padding:11px 14px;background:var(--warn-bg);border:1px solid var(--warn-bd);border-left:3px solid var(--amber);border-radius:0 5px 5px 0}
+.caution-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--amber);font-family:var(--mono);margin-bottom:6px}
+.caution-block p{font-size:12.5px;color:var(--text2);line-height:1.7;margin-bottom:4px}
+.caution-block p:last-child{margin-bottom:0}
+
+/* Table standard */
+.pb-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.pb-table th{padding:7px 12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);background:var(--panel2);border-bottom:2px solid var(--border);text-align:left;font-family:var(--mono)}
+.pb-table td{padding:9px 12px;border-bottom:1px solid var(--border-l);vertical-align:top}
+.pb-table tr:last-child td{border-bottom:none}
+.pb-table tr:hover td{background:var(--hover)}
+
+/* Prose sections */
+.pb-prose{padding:14px 16px;font-size:13px;color:var(--text2);line-height:1.8}
+.pb-prose p{margin-bottom:10px}
+.pb-prose p:last-child{margin-bottom:0}
+.pb-prose ul{margin:8px 0 8px 18px}
+.pb-prose li{margin-bottom:4px;line-height:1.65}
+
+/* Tier colour helpers */
+.c-career{color:var(--career-c)}
+.c-inter{color:var(--inter-c)}
+.c-turtle{color:var(--turtle-c)}
+.bg-career{background:var(--career-bg);border:1px solid var(--career-bd);border-radius:4px;padding:2px 8px}
+.bg-inter{background:var(--inter-bg);border:1px solid var(--inter-bd);border-radius:4px;padding:2px 8px}
+.bg-turtle{background:var(--turtle-bg);border:1px solid var(--turtle-bd);border-radius:4px;padding:2px 8px}
+
+/* Chip */
+.chip,.pl-step-eos.chip{display:inline-block;padding:3px 9px;background:var(--panel2);border:1px solid var(--border);border-radius:4px;font-family:var(--mono);font-size:11px;color:var(--green);cursor:pointer;transition:all .1s;white-space:nowrap}
+.chip:hover{background:var(--hover);border-color:var(--blue);color:var(--blue)}
+.chip.copied{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+
+/* Page sections within each tab */
+.page-section{scroll-margin-top:8px;margin-bottom:28px}
+.ps-anchor{display:block;height:0;visibility:hidden}
+/* Tier hero title colors — work in both light and dark */
+#panel-career .pb-hero-title{color:var(--career-c)}
+#panel-inter  .pb-hero-title{color:var(--inter-c)}
+#panel-turtle .pb-hero-title{color:var(--turtle-c)}
+#panel-ref    .pb-hero-title{color:var(--muted)}
+/* Tier hero borders */
+#panel-inter  .pb-hero{border-color:var(--inter-bd)}
+#panel-turtle .pb-hero{border-color:var(--turtle-bd)}
+#panel-ref    .pb-hero{border-color:var(--border)}
+
+/* ── MOBILE SIDEBAR ─────────────────────────────── */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199}
+.sb-overlay.open{display:block}
+.ham-btn{display:none;background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);border-radius:4px;cursor:pointer;font-size:16px;padding:4px 9px;line-height:1;flex-shrink:0}
+.ham-btn:hover{border-color:#4da6ff;color:#4da6ff}
+@media(max-width:768px){
+  html,body{overflow:auto}
+  .shell{height:auto;min-height:100vh;overflow:visible}
+  .content-row{overflow:visible}
+  .main{overflow:visible}
+  .ham-btn{display:flex;align-items:center}
+  .sidebar,.app-shell>.sidebar{
+    position:fixed!important;left:0;top:0;bottom:0;z-index:200;
+    transform:translateX(-100%);transition:transform .22s ease;
+    height:100%!important;width:240px!important;
+    box-shadow:4px 0 20px rgba(0,0,0,.5);
+  }
+  .sidebar.sb-open,.app-shell>.sidebar.sb-open{transform:translateX(0)}
+  .topbar{flex-wrap:nowrap;overflow:hidden}
+  .tab-nav{display:none!important}
+  .search-wrap,.topbar-search-wrap{display:none}
+  .audience-switcher{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+<div class="shell">
+
+<header class="topbar">
+  <button class="ham-btn" onclick="toggleSidebar()" aria-label="Toggle sidebar" title="Toggle sidebar">&#9776;</button>
+  <div class="logo">EdgeOS <em>SWING TRADING PLAYBOOK</em></div>
+  <nav class="tab-nav"><button class="tab-btn t-career" data-tab="career">⚙ Career</button><button class="tab-btn t-inter" data-tab="inter">🔗 Intermediate</button><button class="tab-btn t-turtle" data-tab="turtle">🐢 Turtle</button><button class="tab-btn t-ref" data-tab="ref">📚 References</button></nav>
+  <div class="search-wrap">
+    <span class="si">⌕</span>
+    <input class="search" id="srch" type="text" placeholder="Search… ( / )" autocomplete="off" spellcheck="false">
+    <button class="sc" id="sc" title="Clear">✕</button>
+  </div>
+  <div class="topbar-right">
+    <span class="tb-pill pill-g">3 Tiers</span>
+    <span class="tb-pill pill-b">6 Research Sources</span>
+    <span class="tb-pill pill-a">Process Loops</span>
+    <button class="tbtn" onclick="toggleTheme()" id="themeBtn">☀ Light</button>
+  </div>
+</header>
+
+<div class="content-row">
+  <nav class="sidebar">
+    <div class="sb-sec">Contents</div>
+    <div id="sbContent"></div>
+  </nav>
+  <main class="main" id="mainPane">
+    <div class="tab-panel" id="panel-career"><div class="pb-hero">
+  <div class="pb-hero-title">⚙ Career Swing Trader Playbook — 10+ Years</div>
+  <div class="pb-hero-sub">You already know the vocabulary. You understand momentum cycles, stage structure, and campaign management. This playbook operationalises EdgeOS as an institutional production system — replacing manual scanning with deterministic output you then apply professional judgment to. The factory runs. You size.</div>
+  <div class="pb-hero-pills">
+    <span class="tier-badge tb-career">Career · 10+ yrs</span>
+    <span class="tb-pill pill-g">Factory Language</span>
+    <span class="tb-pill pill-b">24 Production Lines</span>
+    <span class="tb-pill pill-a">Multi-Line Conviction</span>
+  </div>
+</div><div class="pb-sec page-section" id="sec-C1">
+  <div class="pb-sec-hdr" style="border-left-color:#1a6e1a">
+    <span class="pb-sec-num">C1</span>
+    <span class="pb-sec-title">Operating Philosophy — The Factory Mindset</span>
+    <span class="pb-sec-meta">Foundation</span>
+  </div>
+  <div class="pb-sec-body"><div class="research-block">
+  <div class="rb-header">
+    <span class="rb-tag">RESEARCH</span>
+    <span class="rb-cite">Jegadeesh &amp; Titman (1993), Journal of Finance, 48(1), pp. 65–91</span>
+  </div>
+  <div class="rb-finding">Strategies buying past winners and selling past losers generate significant positive returns over 3–12 month holding periods. Momentum profits are robust to market-risk adjustments — even the Fama-French three-factor model cannot explain them. The effect is documented across 30+ years, multiple asset classes, and global markets.</div>
+  <div class="rb-impl"><strong>EdgeOS Application:</strong> B1–B9 production lines systematically capture the momentum premium. When EdgeOS flags a fresh ignition (count = 1), it identifies the precise moment the Jegadeesh-Titman premium begins. The production system is not a technical opinion — it is a systematic implementation of the most replicated finding in academic finance.</div>
+</div><div class="pb-prose">
+  <p>The Trade Factory is your employer. You are the operator. The factory runs 24/7 producing qualified setup candidates from every ticker in your universe. Your job is not to find setups — that is the factory's job. Your job is to:</p>
+  <ul>
+    <li>Read the factory output and assess conviction level</li>
+    <li>Size positions according to multi-line confirmation</li>
+    <li>Manage open campaigns using TC targets and SATY levels</li>
+    <li>Review the factory's performance weekly and flag systematic issues</li>
+  </ul>
+  <p><strong>What you never do:</strong> override the production lines because a story sounds compelling. The factory computes. You size and manage.</p>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-C2">
+  <div class="pb-sec-hdr" style="border-left-color:#1a6e1a">
+    <span class="pb-sec-num">C2</span>
+    <span class="pb-sec-title">Morning Routine — Daily Opening Loop</span>
+    <span class="pb-sec-meta">Daily · 30 min</span>
+  </div>
+  <div class="pb-sec-body"><div class="process-loop">
+  <div class="pl-header">
+    <span class="pl-icon">☀</span>
+    <span class="pl-title">Morning Routine — Pre-Market Process</span>
+    <span class="pl-freq">Daily · Before open</span>
+  </div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">01</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Read the Regime</div>
+        <div class="pl-step-detail">What is MKT_regime? This determines factory operating conditions for the day. Bull → long factory full. Bear → short factory full. Chop → cash is a legitimate output. Do not deploy capital before you know the operating environment.</div>
+        <div class="pl-step-eos chip" data-phrase="regime today">EdgeOS → regime today</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">02</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Scan Overnight Changes</div>
+        <div class="pl-step-detail">What changed while you were sleeping? Any regime transitions, fresh Stage 3A warnings on open longs, or ignitions that fired in pre-market. These require immediate attention before the open.</div>
+        <div class="pl-step-eos chip" data-phrase="what changed overnight">EdgeOS → what changed overnight</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">03</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Pull Fresh Ignitions (B1)</div>
+        <div class="pl-step-detail">Count = 1 stocks are the earliest signal. Especially valuable when paired with Stage 2A (B-C2) — the AXTI principle applies: if it is firing in a bear market, investigate harder.</div>
+        <div class="pl-step-eos chip" data-phrase="fresh ignitions today">EdgeOS → fresh ignitions today</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">04</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Pull Active Campaigns</div>
+        <div class="pl-step-detail">Where are your open positions in their count cycles? TC targets hit? SATY targets reached? Any deterioration signals (H-layer)? Active campaigns take priority over new setups.</div>
+        <div class="pl-step-eos chip" data-phrase="active campaigns">EdgeOS → active campaigns</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">05</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Sector Context</div>
+        <div class="pl-step-detail">Which sectors are leading today? Where is the momentum money concentrated? A B-C2 breakout in the leading sector outperforms one in a lagging sector by design.</div>
+        <div class="pl-step-eos chip" data-phrase="sector leaders today">EdgeOS → sector leaders today</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">06</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Build the Day List</div>
+        <div class="pl-step-detail">Rank all factory output by conviction: multi-line first, high conviction tags first (tiger in tank, mtf_4_aligned), AXTI stocks flagged separately. This is your watchlist for the session.</div>
+        <div class="pl-step-eos chip" data-phrase="show me today's production ranked">EdgeOS → show me today's production ranked</div>
+      </div>
+    </div></div></div><div class="research-block">
+  <div class="rb-header">
+    <span class="rb-tag">RESEARCH</span>
+    <span class="rb-cite">Kahneman &amp; Tversky (1979), Econometrica, 47(2), pp. 263–291 — Prospect Theory</span>
+  </div>
+  <div class="rb-finding">Loss aversion causes traders to deviate from rational decision-making: cutting winners too early (certainty effect on gains) and holding losers too long (risk-seeking in losses). Pre-trade checklists requiring documentation of both bullish and bearish factors counteract confirmation bias.</div>
+  <div class="rb-impl"><strong>EdgeOS Application:</strong> The morning routine is a cognitive bias mitigation protocol. By reading the regime first and factory output second — never the other way — you prevent narrative-first analysis. The factory found it. You did not.</div>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-C3">
+  <div class="pb-sec-hdr" style="border-left-color:#0050b3">
+    <span class="pb-sec-num">C3</span>
+    <span class="pb-sec-title">Conviction Sizing — Kelly-Aligned Position Architecture</span>
+    <span class="pb-sec-meta">Core Framework</span>
+  </div>
+  <div class="pb-sec-body"><div class="research-block">
+  <div class="rb-header">
+    <span class="rb-tag">RESEARCH</span>
+    <span class="rb-cite">Kelly, J.L. (1956), Bell System Technical Journal, 35(4), pp. 917–926. MacLean, Thorp &amp; Ziemba (2011).</span>
+  </div>
+  <div class="rb-finding">The Kelly Criterion determines the fraction of capital to risk per trade to maximise long-term geometric wealth growth. When multiple independent signals agree on the same outcome, the Kelly-optimal fraction mathematically increases. Fractional Kelly (half-Kelly or 25%) reduces volatility significantly while preserving most of the expected growth.</div>
+  <div class="rb-impl"><strong>EdgeOS Application:</strong> Multi-line conviction sizing is Kelly mathematics made practical. Three independent production lines agreeing on XOM is a genuine increase in the probability of the outcome — not just three ways of saying the same thing. Lines never communicate. Synthesis happens in the operator's mind.</div>
+</div><div class="conv-calc">
+  <div class="cc-title">Conviction → Position Size Matrix</div>
+  <div class="cc-rows">
+    <div class="cc-hdr">Signal Strength</div>
+    <div class="cc-hdr">Lines Active</div>
+    <div class="cc-hdr">Size</div>
+    <div class="cc-hdr">Operator Guidance</div><div class="cc-cell cc-signal">Single line</div>
+    <div class="cc-cell cc-lines">1 production line</div>
+    <div class="cc-cell cc-size cc-size-s">Standard</div>
+    <div class="cc-cell">1× standard unit. Line qualifies. Take it. No inflation.</div><div class="cc-cell cc-signal">Two lines</div>
+    <div class="cc-cell cc-lines">2 independent lines</div>
+    <div class="cc-cell cc-size cc-size-m">Elevated</div>
+    <div class="cc-cell">1.25–1.5× standard. Reduce on first sign of deterioration.</div><div class="cc-cell cc-signal">Three lines</div>
+    <div class="cc-cell cc-lines">3 independent lines</div>
+    <div class="cc-cell cc-size cc-size-h">High</div>
+    <div class="cc-cell">1.75–2× standard. Rare and significant. Confirm sector alignment.</div><div class="cc-cell cc-signal">Three lines + HCT</div>
+    <div class="cc-cell cc-lines">3 lines + tiger_in_tank / mtf_4_aligned</div>
+    <div class="cc-cell cc-size cc-size-x">Maximum</div>
+    <div class="cc-cell">2–2.5× standard. A+ setup. The factory is shouting. Size accordingly.</div></div></div><div class="formula-block">
+  <div class="formula-title">Position Size Formula (ATR-Validated)</div>
+  <code class="formula">Size = (Account Risk %) ÷ (Stop Distance in ATR units × Price)</code>
+  <div class="formula-eg">
+    <strong>Source:</strong> Wilder, J.W. (1978), New Concepts in Technical Trading Systems. ATR-based stops adapt to actual volatility rather than arbitrary percentage thresholds.<br><br>
+    <strong>Example — 1% risk rule ($100,000 account, 1 ATR stop):</strong><br>
+    Stock at $50 · ATR = $1.50 · Stop at $48.50 (1 ATR below entry)<br>
+    Risk = $1.50 · Position size = $1,000 ÷ $1.50 = <span class="fe-code">666 shares = $33,300 notional</span><br><br>
+    <strong>Three-line conviction (1.75× standard):</strong><br>
+    Position size = 666 × 1.75 = <span class="fe-code">1,165 shares</span> · Risk still capped at 1% account
+  </div>
+</div><div class="caution-block">
+  <div class="caution-title">The 1% Rule — Capital Preservation Doctrine</div>
+  <p>Professional swing traders consistently apply 1–2% maximum account risk per trade. A 10-trade losing streak at 1% risk = 9.56% drawdown — recoverable. At 10% risk per trade: 3 losses = 27% drawdown, requiring a 37% gain just to break even.</p><p>Multi-line conviction increases position size — it does not increase risk %. The stop is always placed at the technical invalidation level (SATY trigger, prior support, dip buy milestone). Size is determined by how many shares fit within the 1% risk envelope given that stop.</p>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-C4">
+  <div class="pb-sec-hdr" style="border-left-color:#8a6000">
+    <span class="pb-sec-num">C4</span>
+    <span class="pb-sec-title">Campaign Management — Position Lifecycle</span>
+    <span class="pb-sec-meta">Daily · Open positions only</span>
+  </div>
+  <div class="pb-sec-body"><div class="process-loop">
+  <div class="pl-header">
+    <span class="pl-icon">📋</span>
+    <span class="pl-title">Campaign Management Loop</span>
+    <span class="pl-freq">Daily · Mid-session</span>
+  </div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">01</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Read the Count</div>
+        <div class="pl-step-detail">What is L_momo_ct for each open campaign? Count 1-5: let it run. Count 6-8: approaching exhaustion zone — tighten mental stop. Count 9 or 13: partial profit minimum. Count 13+: exit plan required.</div>
+        <div class="pl-step-eos chip" data-phrase="active campaigns count status">EdgeOS → active campaigns count status</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">02</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Check TC Targets</div>
+        <div class="pl-step-detail">Has price reached TC1, TC2, or TC3? These are the factory's profit targets for this line. TC1 = first take. TC2 = core position decision. TC3 = extension play.</div>
+        <div class="pl-step-eos chip" data-phrase="what are the targets on XOM">EdgeOS → what are the targets on XOM</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">03</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Check SATY Levels</div>
+        <div class="pl-step-detail">Is price still above the SATY trigger level for your timeframe? SATY below trigger on the entry timeframe = deterioration. A stock can remain on B2 while losing SATY — that is the warning.</div>
+        <div class="pl-step-eos chip" data-phrase="SATY status XOM">EdgeOS → SATY status XOM</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">04</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Check Deterioration Layer (H)</div>
+        <div class="pl-step-detail">Is 9_13below_ct_v3 > 0 on any open long? This means price has pulled back below the launch zone. Not necessarily an exit — but it demands attention. Deep counter active = reduce first.</div>
+        <div class="pl-step-eos chip" data-phrase="deterioration status">EdgeOS → deterioration status</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">05</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Stage Check</div>
+        <div class="pl-step-detail">Has any open long transitioned from 2A to 2B (reduce selectivity threshold) or shown Stage 3A warning (protect immediately)? Stage transition overrides everything.</div>
+        <div class="pl-step-eos chip" data-phrase="stage status open campaigns">EdgeOS → stage status open campaigns</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">06</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Manage or Hold</div>
+        <div class="pl-step-detail">For each position: Hold / Add (count 1-5, no deterioration) · Hold / Reduce (count 8-9, approaching TC targets) · Exit (Stage 3A fired, count 13+, SATY lost on 2 timeframes)</div>
+        <div class="pl-step-eos chip" data-phrase="show all campaigns full">EdgeOS → show all campaigns full</div>
+      </div>
+    </div></div></div></div>
+</div><div class="pb-sec page-section" id="sec-C5">
+  <div class="pb-sec-hdr" style="border-left-color:#005a5a">
+    <span class="pb-sec-num">C5</span>
+    <span class="pb-sec-title">Weekly Review — The Compounding Mechanism</span>
+    <span class="pb-sec-meta">Weekly · Non-negotiable</span>
+  </div>
+  <div class="pb-sec-body"><div class="process-loop">
+  <div class="pl-header">
+    <span class="pl-icon">📊</span>
+    <span class="pl-title">Weekly Review Loop — The Compounding Mechanism</span>
+    <span class="pl-freq">Weekly · Weekend</span>
+  </div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">01</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Trade Capture</div>
+        <div class="pl-step-detail">Log every trade: entry date, production line, conviction level (lines active + tags), entry price, stop placement, TC target, actual exit, P&L. Non-negotiable. This is the raw material for your improvement process.</div>
+        <div class="pl-step-eos chip" data-phrase="export weekly report">EdgeOS → export weekly report</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">02</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Line Performance Audit</div>
+        <div class="pl-step-detail">Which production lines produced the best R-multiples this week? Which produced the most false signals in the current regime? Are B-C2 breakouts working in this market structure? Adjust your attention — not the rules.</div>
+        <div class="pl-step-eos chip" data-phrase="weekly performance by line">EdgeOS → weekly performance by line</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">03</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Regime Drift Review</div>
+        <div class="pl-step-detail">Has the regime shifted in the last 5 days? What happened to open positions during the shift? Were you positioned correctly? Regime awareness is the highest-order skill in the system.</div>
+        <div class="pl-step-eos chip" data-phrase="regime history this week">EdgeOS → regime history this week</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">04</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">AXTI Investigation</div>
+        <div class="pl-step-detail">List every stock that appeared on a bullish line during a bear market day this week. Investigate each one. One will be the next AXTI. Price knew first. Did you?</div>
+        <div class="pl-step-eos chip" data-phrase="ignitions during market down days">EdgeOS → ignitions during market down days</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">05</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Process Errors vs Outcome Errors</div>
+        <div class="pl-step-detail">Separate bad process (violated the rules, sized incorrectly, ignored deterioration) from bad luck (perfect setup, adverse outcome). Only process errors require action. Never change rules because of outcome errors.</div>
+        
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">06</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Next Week Setup</div>
+        <div class="pl-step-detail">Which stocks are approaching Stage 1B → 2A transition? Which are at 8-count approaching dip buy territory? Build the watchlist before the week starts.</div>
+        <div class="pl-step-eos chip" data-phrase="stage 1B approaching breakout">EdgeOS → stage 1B approaching breakout</div>
+      </div>
+    </div></div></div><div class="research-block">
+  <div class="rb-header">
+    <span class="rb-tag">RESEARCH</span>
+    <span class="rb-cite">Multi-Asset Swing Trading Research (2025) — Practitioner synthesis</span>
+  </div>
+  <div class="rb-finding">Systematic review of past trades improves pattern recognition accuracy by approximately 23–31% over six months. Detailed records of entry rationale, technical setups, emotional states, and post-trade analysis consistently correlate with improved long-term performance across practitioner studies.</div>
+  <div class="rb-impl"><strong>EdgeOS Application:</strong> The Weekly Review loop is not administrative overhead. It is the only mechanism through which your edge compounds over time. The factory provides setups. The review provides the operator skill to apply those setups at maximum quality.</div>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-C6">
+  <div class="pb-sec-hdr" style="border-left-color:#bb0000">
+    <span class="pb-sec-num">C6</span>
+    <span class="pb-sec-title">Regime-Adaptive Operating Protocol</span>
+    <span class="pb-sec-meta">Continuous</span>
+  </div>
+  <div class="pb-sec-body"><div class="pb-prose">
+  <p>The regime layer (Layer F) determines factory operating conditions. A Career trader does not adjust their process — they adjust their deployment intensity. The production lines always run. The operator always filters.</p>
+</div><table class="pb-table">
+  <thead><tr><th>Regime</th><th>Long Factory</th><th>Short Factory</th><th>Sizing Rule</th><th>Key Focus</th></tr></thead>
+  <tbody>
+    <tr><td><strong style="color:var(--green)">Bull</strong></td><td>Full deployment</td><td>Offline</td><td>Standard → multi-line inflated</td><td>Fresh ignitions, B-C2 breakouts, sector leaders</td></tr>
+    <tr><td><strong style="color:var(--blue)">Strengthening</strong></td><td>Selective</td><td>Sector-only</td><td>Standard only</td><td>Stage 2A + count + SATY triple confirmation only</td></tr>
+    <tr><td><strong style="color:var(--amber)">Chop</strong></td><td>Standby</td><td>Watchful</td><td>Reduced or cash</td><td>Cash is correct output. Wait. The factory will reload.</td></tr>
+    <tr><td><strong style="color:var(--red)">Bear</strong></td><td>AXTI investigation</td><td>Full deployment</td><td>Short side inflated</td><td>S-C3 breakdowns + S3 campaign breakdowns. Investigate any bull signal.</td></tr>
+  </tbody>
+</table><div class="caution-block">
+  <div class="caution-title">AXTI Principle — Career-Grade Application</div>
+  <p>Every Career trader should maintain an AXTI watchlist. When a stock appears on a bullish production line during a broad market selloff, the factory is telling you something the tape has not confirmed yet. Price knows first.</p><p>AXTI is not a trade signal. It is an investigation trigger. Ask: what does this company know that the market does not? Is there institutional accumulation in a specific sector while the broad market sells? The answer often leads to the best trade of the quarter.</p>
+</div></div>
+</div></div><div class="tab-panel" id="panel-inter"><div class="pb-hero">
+  <div class="pb-hero-title">🔗 Intermediate Trader Playbook — 3–5 Years</div>
+  <div class="pb-hero-sub">You understand technical analysis and have traded through different market conditions. This playbook bridges your existing knowledge to the EdgeOS production system — translating what you already know (breakouts, pullbacks, momentum) into deterministic factory language, and adding the process discipline that separates the consistent from the occasional.</div>
+  <div class="pb-hero-pills">
+    <span class="tier-badge tb-inter">Intermediate · 3–5 yrs</span>
+    <span class="tb-pill pill-b">Context + Output</span>
+    <span class="tb-pill pill-g">Process Discipline</span>
+    <span class="tb-pill pill-a">Stage Understanding</span>
+  </div>
+</div><div class="pb-sec page-section" id="sec-I1">
+  <div class="pb-sec-hdr" style="border-left-color:#0050b3">
+    <span class="pb-sec-num">I1</span>
+    <span class="pb-sec-title">Connecting Your Knowledge to Factory Language</span>
+    <span class="pb-sec-meta">Foundation</span>
+  </div>
+  <div class="pb-sec-body"><div class="pb-prose">
+  <p>You already use terms like "breakout," "pullback," "momentum," and "trend." EdgeOS maps your existing vocabulary directly to production line outputs. Nothing you know is wrong — the system gives it deterministic form.</p>
+</div><table class="pb-table">
+  <thead><tr><th>What You Already Know</th><th>EdgeOS Production Line</th><th>What This Means Precisely</th></tr></thead>
+  <tbody>
+    <tr><td>"Stock is breaking out"</td><td><strong style="color:var(--green)">B-C2</strong></td><td>STAGE = 2A, STAGE_bull = True, price above 50SMA, fresh_breakout tag, often paired with B1 (count just started)</td></tr>
+    <tr><td>"Momentum is running"</td><td><strong style="color:var(--green)">B2</strong></td><td>L_momo_ct between 2 and 8, L_momo_active = True — the cycle is alive and progressing</td></tr>
+    <tr><td>"Pulling back to support"</td><td><strong style="color:var(--blue)">B5/B6</strong></td><td>9_13below milestone hit (B5) or no deep counter active + leader status (B6) — the dip buy is mathematically defined</td></tr>
+    <tr><td>"Stock is extended"</td><td><strong style="color:var(--amber)">B3/B4</strong></td><td>L_momo_ct approaching 9 or 13 — exhaustion watch. 50ext_state = Extended. The factory flags this automatically.</td></tr>
+    <tr><td>"Stock is breaking down"</td><td><strong style="color:var(--red)">S-C3</strong></td><td>STAGE = 4A, STAGE_bear = True, price below 50SMA, fresh breakdown tag — mirror image of the B-C2 entry</td></tr>
+    <tr><td>"Trend is topping"</td><td><strong style="color:var(--amber)">S-C1/S-C2</strong></td><td>Stage 3A warning (fresh_3a tag = immediate action) or Stage 3B distribution (reduce longs on rallies)</td></tr>
+  </tbody>
+</table></div>
+</div><div class="pb-sec page-section" id="sec-I2">
+  <div class="pb-sec-hdr" style="border-left-color:#0050b3">
+    <span class="pb-sec-num">I2</span>
+    <span class="pb-sec-title">Morning Routine — Intermediate Process Loop</span>
+    <span class="pb-sec-meta">Daily · 20–30 min</span>
+  </div>
+  <div class="pb-sec-body"><div class="process-loop">
+  <div class="pl-header">
+    <span class="pl-icon">☀</span>
+    <span class="pl-title">Intermediate Morning Loop</span>
+    <span class="pl-freq">Daily · Before open</span>
+  </div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">01</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Read the Regime and What It Means for You</div>
+        <div class="pl-step-detail">Intermediate traders benefit from the brief context strip: Bull means the long factory is at full capacity — be aggressive. Bear means protect first and look for shorts second. Chop means reduce size and wait.</div>
+        <div class="pl-step-eos chip" data-phrase="regime today with explanation">EdgeOS → regime today with explanation</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">02</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Morning Briefing</div>
+        <div class="pl-step-detail">Pull a full morning briefing. This gives you regime, overnight changes, top production line output, and sector context in one place. Read it fully before looking at any individual charts.</div>
+        <div class="pl-step-eos chip" data-phrase="morning briefing">EdgeOS → morning briefing</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">03</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Focus on the Top Tier</div>
+        <div class="pl-step-detail">You do not need to review all 24 lines every morning. Focus on: Fresh ignitions (B1 — the start) · Stage 2A breakouts (B-C2 — the structure) · Strong leader dip buys (B6 — the pullback). These three cover 80% of the best setups.</div>
+        <div class="pl-step-eos chip" data-phrase="show me ignitions breakouts and dip buys">EdgeOS → show me ignitions breakouts and dip buys</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">04</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Check One Open Position Per 5 Minutes</div>
+        <div class="pl-step-detail">Do not check positions constantly. Once in the morning: count status, any Stage 3A warnings, any deterioration signal. Make your decision. Do not revisit until session end.</div>
+        <div class="pl-step-eos chip" data-phrase="active campaigns status">EdgeOS → active campaigns status</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">05</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Two-Question Pre-Trade Filter</div>
+        <div class="pl-step-detail">Before entering any new setup: (1) What is the count? (2) What is the regime? If count is 8+ in a choppy regime, the answer is no. These two questions eliminate the majority of low-quality trades.</div>
+        
+      </div>
+    </div></div></div><div class="research-block">
+  <div class="rb-header">
+    <span class="rb-tag">RESEARCH</span>
+    <span class="rb-cite">Kahneman &amp; Tversky (1979) — Loss Aversion in Trading</span>
+  </div>
+  <div class="rb-finding">Intermediate traders are most vulnerable to the disposition effect: selling winners too early (locking in the certainty of a small gain) while holding losers too long (avoiding the certainty of a loss). Research shows losses feel approximately 2× more painful than equivalent gains, causing systematic underperformance even when setups are good.</div>
+  <div class="rb-impl"><strong>EdgeOS Application:</strong> The production line count system is a behavioral bias antidote. When a stock is at count 1–5, the research says let it run — the momentum premium peaks in the 3–12 month window. Your discomfort with open positions is loss aversion talking. The count tells you where you actually are in the cycle.</div>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-I3">
+  <div class="pb-sec-hdr" style="border-left-color:#6a0dad">
+    <span class="pb-sec-num">I3</span>
+    <span class="pb-sec-title">Stage Analysis — Understanding the Framework Behind Layer C</span>
+    <span class="pb-sec-meta">Core Knowledge</span>
+  </div>
+  <div class="pb-sec-body"><div class="research-block">
+  <div class="rb-header">
+    <span class="rb-tag">RESEARCH</span>
+    <span class="rb-cite">Weinstein, S. (1988), Secrets for Profiting in Bull and Bear Markets. Validated by 35+ years of practitioner application.</span>
+  </div>
+  <div class="rb-finding">Stocks cycle through four stages: Stage 1 (Accumulation/Base), Stage 2 (Markup/Advance — the ideal buy zone), Stage 3 (Distribution/Top), Stage 4 (Decline — avoid longs). Stage 2, where the 40-week MA is rising and price stays above it, is where the majority of investment gains occur. The 40-week MA (200-day MA) is the primary trend filter.</div>
+  <div class="rb-impl"><strong>EdgeOS Application:</strong> EdgeOS Layer C operationalises Weinstein's framework deterministically. B-C2 is Stage 2A. B-C3 is the Stage 2A pullback re-entry. S-C3 is Stage 4A. The subjective part — "is this really Stage 2?" — is replaced by precise criteria you can audit.</div>
+</div><div class="decision-tree">
+  <div class="dt-header">Stage-Based Entry Decision Tree — Intermediate</div>
+  <div class="dt-body"><div class="dt-node"><div class="dt-q dt-q-q">?</div><div class="dt-txt">What stage is the stock in?</div></div><div class="dt-node"><div class="dt-q dt-q-y">✓</div><div class="dt-txt"><strong>Stage 1B</strong> → Watchlist only (B-C1). Do not enter. Wait for B-C2 breakout. Ask EdgeOS: "show me stocks approaching Stage 2A"</div></div><div class="dt-node"><div class="dt-q dt-q-y">✓</div><div class="dt-txt"><strong>Stage 2A</strong> → Entry zone. Check: fresh_breakout tag (days 1-5 = maximum conviction). Count 1-4 = add to position. Above 50SMA. If yes → B-C2 setup. Enter.</div></div><div class="dt-node"><div class="dt-q dt-q-y">✓</div><div class="dt-txt"><strong>Stage 2B</strong> → Elevated selectivity. Stock is in an established advance. Only enter on strong sector tailwind + multi-line confirmation. Reduce size vs 2A entry.</div></div><div class="dt-node"><div class="dt-q dt-q-n">✗</div><div class="dt-txt"><strong>Stage 3A/3B</strong> → Immediate action on open longs. Protect profits. Reduce. For new entries: this is NOT a setup — it is an exit signal for existing positions.</div></div><div class="dt-node"><div class="dt-q dt-q-n">✗</div><div class="dt-txt"><strong>Stage 4</strong> → No long positions. Short opportunities only (S-C3, S-C4 for experienced operators).</div></div></div></div></div>
+</div><div class="pb-sec page-section" id="sec-I4">
+  <div class="pb-sec-hdr" style="border-left-color:#0050b3">
+    <span class="pb-sec-num">I4</span>
+    <span class="pb-sec-title">Position Sizing — Building the Habit Before the Complexity</span>
+    <span class="pb-sec-meta">Core Framework</span>
+  </div>
+  <div class="pb-sec-body"><div class="pb-prose">
+  <p>Intermediate traders should start with fixed risk per trade and work toward conviction-adjusted sizing as pattern recognition develops. The two-step approach below builds discipline before complexity.</p>
+</div><div class="formula-block">
+  <div class="formula-title">Step 1 — Fixed Risk Baseline (Start Here)</div>
+  <code class="formula">Risk $ = Account × 1% &nbsp;·&nbsp; Shares = Risk $ ÷ (Entry − Stop)</code>
+  <div class="formula-eg">
+    <strong>Example:</strong> $50,000 account · 1% risk = <span class="fe-code">$500 max loss</span><br>
+    Stock at $80 · Stop at $77 (below 50SMA support) = $3 risk per share<br>
+    Position size = $500 ÷ $3 = <span class="fe-code">166 shares ($13,280 notional)</span><br><br>
+    <strong>Why the stop must be at technical invalidation, not arbitrary:</strong> A 5% stop on a low-volatility stock may be too wide. A 2% stop on a high-volatility stock will be hit by noise. Use the SATY trigger level or prior support structure as your stop. EdgeOS provides both.
+  </div>
+</div><div class="formula-block">
+  <div class="formula-title">Step 2 — Basic Conviction Adjustment (After 6 months of journaling)</div>
+  <code class="formula">If 2 lines active → ×1.25 &nbsp;·&nbsp; If 3 lines + HCT → ×1.5 &nbsp;·&nbsp; Never exceed 2% risk</code>
+  <div class="formula-eg">
+    Start at 1× standard for every trade. After tracking 50+ trades and reviewing results, apply conviction multipliers. Do not begin with multiplied sizing — pattern recognition must precede conviction adjustments.
+  </div>
+</div><div class="caution-block">
+  <div class="caution-title">The Journal Requirement</div>
+  <p>Intermediate traders who do not keep trade journals are leaving 23–31% of their skill development on the table. Log every trade: which production line, the count, the stage, the regime, and your emotional state at entry. Review every Sunday.</p><p>The journal is not about past performance — it is about building the sample size needed to calculate your actual win rate and risk/reward. These numbers are the inputs to the Kelly Criterion. Without them, position sizing is pure guesswork.</p>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-I5">
+  <div class="pb-sec-hdr" style="border-left-color:#005a5a">
+    <span class="pb-sec-num">I5</span>
+    <span class="pb-sec-title">Weekly Review — Building the Compound Skill Loop</span>
+    <span class="pb-sec-meta">Weekly</span>
+  </div>
+  <div class="pb-sec-body"><div class="process-loop">
+  <div class="pl-header">
+    <span class="pl-icon">📊</span>
+    <span class="pl-title">Intermediate Weekly Review</span>
+    <span class="pl-freq">Weekly · 45 minutes</span>
+  </div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">01</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Log the Week</div>
+        <div class="pl-step-detail">Every trade: line triggered, regime at entry, count at entry, result. 5 minutes per trade. This is the most valuable 30 minutes you spend each week.</div>
+        <div class="pl-step-eos chip" data-phrase="export weekly report">EdgeOS → export weekly report</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">02</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Three Questions</div>
+        <div class="pl-step-detail">Did I follow the process? (Yes/No for each trade). Did I size correctly? (Compare actual to formula). Did I exit at the right level? (TC target, stage change, or count 9+?)</div>
+        
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">03</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Stage Transitions Review</div>
+        <div class="pl-step-detail">Which stocks in your universe changed stage this week? Any open long that moved to Stage 3A? Any Stage 1B approaching breakout? This is your forward watchlist.</div>
+        <div class="pl-step-eos chip" data-phrase="stage changes this week">EdgeOS → stage changes this week</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">04</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Regime Alignment Check</div>
+        <div class="pl-step-detail">Were your entries aligned with the regime? If you took long positions in a bear regime, what was the rationale? Was it an AXTI investigation or an emotional trade?</div>
+        <div class="pl-step-eos chip" data-phrase="regime vs my trades comparison">EdgeOS → regime vs my trades comparison</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">05</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">One Learning</div>
+        <div class="pl-step-detail">Identify exactly one thing you will do differently next week. Not ten things. One. Write it down. Review it the following Sunday.</div>
+        
+      </div>
+    </div></div></div></div>
+</div></div><div class="tab-panel" id="panel-turtle"><div class="pb-hero" >
+  <div class="pb-hero-title">🐢 Turtle Playbook — New to EdgeOS</div>
+  <div class="pb-hero-sub">You are learning to trade, or learning this system for the first time. This playbook teaches you how EdgeOS works, why the rules are what they are, and how to build good habits from day one. You do not need to understand everything immediately. The system will teach you as you use it — if you follow the process.</div>
+  <div class="pb-hero-pills">
+    <span class="tier-badge tb-turtle">Turtle · New User</span>
+    <span class="tb-pill pill-a">Full Explanations</span>
+    <span class="tb-pill pill-g">Process First</span>
+    <span class="tb-pill pill-b">Learn as You Trade</span>
+  </div>
+</div><div class="pb-sec page-section" id="sec-T1">
+  <div class="pb-sec-hdr" style="border-left-color:#8a6000">
+    <span class="pb-sec-num">T1</span>
+    <span class="pb-sec-title">What Is EdgeOS? — The Production System Explained</span>
+    <span class="pb-sec-meta">Start Here</span>
+  </div>
+  <div class="pb-sec-body"><div class="pb-prose">
+  <p><strong>EdgeOS is a production system, not a tip service.</strong> It does not tell you what to buy. It tells you which stocks currently meet the criteria for specific types of setups — and it does this for every stock in the universe, every day, deterministically.</p>
+  <p>Think of it as a factory that runs 24 hours a day, 7 days a week, processing every stock through 24 production lines. When a stock meets the criteria for a line, it appears in that line's output. Your job — as the operator — is to read the output and decide whether to act.</p>
+  <p><strong>The most important thing to understand first:</strong> EdgeOS computes. You communicate with it in plain English. You never need to memorise codes or commands. Just describe what you want to know.</p>
+</div><div class="decision-tree">
+  <div class="dt-header">How EdgeOS Works — The Simplified Model</div>
+  <div class="dt-body">
+    <div class="dt-node"><div class="dt-q dt-q-q">1</div><div class="dt-txt"><strong>You type in plain English</strong> — "what is the market doing today?" or "show me stocks with momentum"</div></div>
+    <div class="dt-node"><div class="dt-q dt-q-q">2</div><div class="dt-txt"><strong>EdgeOS translates your words</strong> into a precise database query against real market data</div></div>
+    <div class="dt-node"><div class="dt-q dt-q-q">3</div><div class="dt-txt"><strong>The production lines report output</strong> — stocks that mathematically qualify today, with their tags and targets</div></div>
+    <div class="dt-node"><div class="dt-q dt-q-q">4</div><div class="dt-txt"><strong>You evaluate the output</strong> — using the playbook process loops to decide what to do with what the factory produced</div></div>
+  </div>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-T2">
+  <div class="pb-sec-hdr" style="border-left-color:#8a6000">
+    <span class="pb-sec-num">T2</span>
+    <span class="pb-sec-title">Five Concepts to Learn First</span>
+    <span class="pb-sec-meta">Foundation</span>
+  </div>
+  <div class="pb-sec-body"><div class="pb-prose">
+  <p>You do not need to understand all 24 production lines to start. Learn these five concepts first. Everything else builds on them.</p>
+</div><div class="pb-sec" style="margin-bottom:12px">
+  <div class="pb-sec-hdr" style="border-left-color:var(--blue)">
+    <span class="pb-sec-title">The Regime</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose"><p>Is the market going up, down, or sideways overall? EdgeOS calls this the "regime." Bull = up, Bear = down, Chop = sideways. The regime tells you which factory to prioritize. Always ask about the regime before anything else.</p></div>
+    <div style="padding:8px 16px 12px"><span class="chip" data-phrase="what is the regime today">what is the regime today</span></div>
+  </div>
+</div><div class="pb-sec" style="margin-bottom:12px">
+  <div class="pb-sec-hdr" style="border-left-color:var(--green)">
+    <span class="pb-sec-title">Momentum Count</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose"><p>When a stock starts moving in a direction, EdgeOS counts the days. Count 1 = just started (freshest signal). Count 2–8 = it is running. Count 9 or 13 = it might be running out of steam. You want to buy early (count 1–4), not late (count 9+).</p></div>
+    <div style="padding:8px 16px 12px"><span class="chip" data-phrase="show me stocks at count 1 today">show me stocks at count 1 today</span></div>
+  </div>
+</div><div class="pb-sec" style="margin-bottom:12px">
+  <div class="pb-sec-hdr" style="border-left-color:var(--green)">
+    <span class="pb-sec-title">Stage Structure</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose"><p>Every stock is in one of four phases: building a base (Stage 1), advancing upward (Stage 2), topping out (Stage 3), or declining (Stage 4). You want to buy Stage 2 stocks — that is where the gains are. The research on this goes back to 1988 and has never been disproven.</p></div>
+    <div style="padding:8px 16px 12px"><span class="chip" data-phrase="what stage is XOM in">what stage is XOM in</span></div>
+  </div>
+</div><div class="pb-sec" style="margin-bottom:12px">
+  <div class="pb-sec-hdr" style="border-left-color:var(--amber)">
+    <span class="pb-sec-title">Targets (TC)</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose"><p>Every production line produces price targets for where the setup naturally concludes. TC1 is the first take-profit level. You do not have to decide when to sell — the factory calculates the targets based on the setup type.</p></div>
+    <div style="padding:8px 16px 12px"><span class="chip" data-phrase="what are the targets on XOM">what are the targets on XOM</span></div>
+  </div>
+</div><div class="pb-sec" style="margin-bottom:12px">
+  <div class="pb-sec-hdr" style="border-left-color:var(--red)">
+    <span class="pb-sec-title">Cash Is OK</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose"><p>When the factory produces no qualified setups, or the regime is choppy, cash is the correct choice. Not trading is a valid trade. Many new traders feel they must always be in a position. The factory will tell you when to act.</p></div>
+    <div style="padding:8px 16px 12px"><span class="chip" data-phrase="is there anything good today">is there anything good today</span></div>
+  </div>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-T3">
+  <div class="pb-sec-hdr" style="border-left-color:#8a6000">
+    <span class="pb-sec-num">T3</span>
+    <span class="pb-sec-title">Morning Routine — Daily Learning Loop</span>
+    <span class="pb-sec-meta">Daily · 30 min</span>
+  </div>
+  <div class="pb-sec-body"><div class="process-loop">
+  <div class="pl-header">
+    <span class="pl-icon">☀</span>
+    <span class="pl-title">Turtle Morning Routine — Learn While You Watch</span>
+    <span class="pl-freq">Daily · 30 minutes</span>
+  </div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">01</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Ask About the Market</div>
+        <div class="pl-step-detail">Every morning, before anything else: ask EdgeOS what the market is doing. Read the full explanation it gives you. This context is everything — it tells you whether today is a day to look for opportunities or a day to protect what you have.</div>
+        <div class="pl-step-eos chip" data-phrase="what is the market doing today">EdgeOS → what is the market doing today</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">02</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Ask for a Morning Briefing</div>
+        <div class="pl-step-detail">Ask EdgeOS for a briefing. It will summarise the regime, any big overnight changes, and which production lines have output today. Read every word. This replaces 2 hours of chart-scanning.</div>
+        <div class="pl-step-eos chip" data-phrase="give me a morning briefing">EdgeOS → give me a morning briefing</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">03</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Ask About Momentum Stocks</div>
+        <div class="pl-step-detail">Ask EdgeOS to show you stocks that are just starting to move (fresh ignitions, count 1). These are the earliest and therefore cleanest signals. Do not try to evaluate all of them — just understand what the factory is telling you.</div>
+        <div class="pl-step-eos chip" data-phrase="show me fresh starts today">EdgeOS → show me fresh starts today</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">04</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Pick One to Study</div>
+        <div class="pl-step-detail">Pick one stock from the output and ask EdgeOS to explain everything about it: what stage it is in, what its count is, what the targets are, and why it appeared in the output. Do this every day. Over 30 days, you will understand the system better than most traders.</div>
+        <div class="pl-step-eos chip" data-phrase="explain XOM fully">EdgeOS → explain XOM fully</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">05</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Write It Down</div>
+        <div class="pl-step-detail">In a notebook or simple spreadsheet: date, stock, count, stage, regime, targets. Even if you do not trade it yet. The habit of observing and recording will compound dramatically. This is the most important instruction in this entire playbook.</div>
+        
+      </div>
+    </div></div></div><div class="research-block">
+  <div class="rb-header">
+    <span class="rb-tag">RESEARCH</span>
+    <span class="rb-cite">Weinstein (1988) — Validated across 35+ years of market cycles</span>
+  </div>
+  <div class="rb-finding">Stage 2 (the markup phase, where the 40-week/200-day moving average is rising and price stays above it) is where the majority of investment gains occur. New traders who wait for Stage 2 confirmation before entering, rather than buying in Stage 1 or 4, dramatically improve their baseline performance before any other skill is developed.</div>
+  <div class="rb-impl"><strong>EdgeOS Application:</strong> The most valuable thing a Turtle can do immediately: never buy a stock that EdgeOS says is in Stage 3 or Stage 4. This one rule, applied consistently, eliminates a significant category of losing trades before the trade is even made.</div>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-T4">
+  <div class="pb-sec-hdr" style="border-left-color:#8a6000">
+    <span class="pb-sec-num">T4</span>
+    <span class="pb-sec-title">First Trade Protocol — The Non-Negotiable Checklist</span>
+    <span class="pb-sec-meta">Every Trade</span>
+  </div>
+  <div class="pb-sec-body"><div class="pb-prose">
+  <p>When you are ready to place your first trade, use this checklist. Every item must be yes before you enter. This is not optional. Each item exists because a specific research finding shows it improves outcomes.</p>
+</div><div class="process-loop">
+  <div class="pl-header"><span class="pl-icon">✅</span><span class="pl-title">First Trade Checklist</span><span class="pl-freq">Every Trade</span></div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">1</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Regime check</div>
+        <div class="pl-step-detail">Is the regime Bull or Strengthening? (Never enter a new long position in Chop or Bear regime as a new trader)</div>
+        <div class="pl-step-eos chip" data-phrase="what is the regime today">EdgeOS → what is the regime today</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">2</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Stage check</div>
+        <div class="pl-step-detail">Is the stock in Stage 2A or 2B? (Not Stage 3 or 4)</div>
+        <div class="pl-step-eos chip" data-phrase="what stage is [stock] in">EdgeOS → what stage is [stock] in</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">3</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Count check</div>
+        <div class="pl-step-detail">Is the count between 1 and 6? (Not 8, 9, or 13)</div>
+        <div class="pl-step-eos chip" data-phrase="what is the count on [stock]">EdgeOS → what is the count on [stock]</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">4</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Stop level</div>
+        <div class="pl-step-detail">Do I know exactly where I will exit if I am wrong? (TC targets or prior support)</div>
+        <div class="pl-step-eos chip" data-phrase="what are the exit levels on [stock]">EdgeOS → what are the exit levels on [stock]</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">5</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Size check</div>
+        <div class="pl-step-detail">Have I calculated my position size so I risk no more than 1% of my account?</div>
+        
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">6</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Target check</div>
+        <div class="pl-step-detail">Do I know TC1 — the first profit target? (This is where I will take some profit)</div>
+        <div class="pl-step-eos chip" data-phrase="what are the targets on [stock]">EdgeOS → what are the targets on [stock]</div>
+      </div>
+    </div></div></div><div class="research-block">
+  <div class="rb-header">
+    <span class="rb-tag">RESEARCH</span>
+    <span class="rb-cite">Wilder (1978) ATR methodology · 1% Rule validated across professional trading literature</span>
+  </div>
+  <div class="rb-finding">Professional swing traders consistently apply 1–2% maximum account risk per trade. A 10-trade losing streak at 1% risk results in a 9.56% drawdown — recoverable with a 10.6% gain. At 10% risk per trade: three losses create a 27.1% drawdown requiring a 37.2% gain just to break even.</div>
+  <div class="rb-impl"><strong>EdgeOS Application:</strong> The 1% rule is not conservative — it is mathematically necessary for survival long enough to develop skill. A Turtle who risks 10% per trade will run out of capital before they run out of lessons to learn.</div>
+</div></div>
+</div><div class="pb-sec page-section" id="sec-T5">
+  <div class="pb-sec-hdr" style="border-left-color:#8a6000">
+    <span class="pb-sec-num">T5</span>
+    <span class="pb-sec-title">Learning Loops — Pattern Recognition is the Product</span>
+    <span class="pb-sec-meta">Continuous</span>
+  </div>
+  <div class="pb-sec-body"><div class="pb-prose">
+  <p><strong>The Turtle path to Career level has exactly one bottleneck:</strong> the number of market observations you make and record. Not the number of books you read. Not the number of courses you take. Observation + recording + review = pattern recognition.</p>
+</div><div class="process-loop">
+  <div class="pl-header">
+    <span class="pl-icon">🔍</span>
+    <span class="pl-title">Daily Observation Loop</span>
+    <span class="pl-freq">Daily · 5 min</span>
+  </div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">01</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">One stock per day, full analysis</div>
+        <div class="pl-step-detail">Pick any stock from EdgeOS output. Ask for its full profile. Write down: stage, count, regime, targets. Do not trade it. Just observe.</div>
+        <div class="pl-step-eos chip" data-phrase="explain [stock] fully">EdgeOS → explain [stock] fully</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">02</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Note the result tomorrow</div>
+        <div class="pl-step-detail">Did the stock move toward TC1? Did it break down? What happened? This builds the mental model faster than any course.</div>
+        
+      </div>
+    </div></div></div><div class="process-loop">
+  <div class="pl-header">
+    <span class="pl-icon">📘</span>
+    <span class="pl-title">Weekly Learning Loop</span>
+    <span class="pl-freq">Weekly · 20 min</span>
+  </div>
+  <div class="pl-steps"><div class="pl-step">
+      <div class="pl-step-num">01</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Review 5 stocks you watched this week</div>
+        <div class="pl-step-detail">What did you predict? What happened? Where were you right? Where wrong? No judgment — only curiosity.</div>
+        
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">02</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Ask EdgeOS one question you do not understand</div>
+        <div class="pl-step-detail">Every week, ask about one term, concept, or production line that is unclear. EdgeOS will explain it in full.</div>
+        <div class="pl-step-eos chip" data-phrase="explain [term] to me">EdgeOS → explain [term] to me</div>
+      </div>
+    </div><div class="pl-step">
+      <div class="pl-step-num">03</div>
+      <div class="pl-step-body">
+        <div class="pl-step-title">Connect one concept to a real example</div>
+        <div class="pl-step-detail">Find a stock this week that demonstrated the concept. Seeing it in live data is worth 10 written explanations.</div>
+        
+      </div>
+    </div></div></div><div class="caution-block">
+  <div class="caution-title">The Most Common Turtle Mistake</div>
+  <p>Trying to learn everything before placing a trade. The system teaches you as you use it — but only if you use it. Start with observation only for two weeks. Then paper-trade (no real money) for two weeks. Then trade real money at minimum size with maximum process.</p><p>Skill in trading is pattern recognition. Pattern recognition requires thousands of observations. The only way to get there is to make observations — consistently, over time, with deliberate recording and review. There are no shortcuts.</p>
+</div></div>
+</div></div><div class="tab-panel" id="panel-ref"><div class="pb-hero" >
+  <div class="pb-hero-title">📚 Research Foundation — Peer-Reviewed Sources</div>
+  <div class="pb-hero-sub">Every principle in this playbook is grounded in peer-reviewed academic research, validated practitioner methodology, or both. These are the sources. No principle cited in this playbook was invented for EdgeOS — all were documented by independent researchers and confirmed across replications.</div>
+</div><div class="pb-sec page-section" id="R1">
+  <div class="pb-sec-hdr" style="border-left-color:#1a6e1a">
+    <span class="pb-sec-num">R1</span>
+    <span class="pb-sec-title">Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose">
+      <p><strong>Authors:</strong> Narasimhan Jegadeesh &amp; Sheridan Titman</p>
+      <p><strong>Source:</strong> <em>Journal of Finance, Vol. 48, No. 1, March 1993, pp. 65–91</em></p>
+      <p><strong>Recognition:</strong> Wharton-Jacobs Levy Prize for Quantitative Finance (2021) · 3rd most cited paper in finance history</p>
+    </div>
+    <div class="research-block" style="margin:0">
+      <div class="rb-header"><span class="rb-tag">FINDING</span></div>
+      <div class="rb-finding">Strategies that buy stocks that have performed well in the past and sell stocks that have performed poorly generate significant positive returns over 3–12 month holding periods. Momentum profits are not attributable to systematic risk — even the Fama-French three-factor model cannot explain them. The effect has been replicated in 30+ years of subsequent research across global markets and multiple asset classes.</div>
+      <div class="rb-impl"><strong>Playbook Application:</strong> Validates the entire B-layer momentum production line system (B1–B9). Fresh ignitions (count = 1) capture the start of the Jegadeesh-Titman premium window. The systematic production line approach is a deterministic implementation of the momentum factor documented in this landmark paper.</div>
+    </div>
+  </div>
+</div><div class="pb-sec page-section" id="R2">
+  <div class="pb-sec-hdr" style="border-left-color:#bb0000">
+    <span class="pb-sec-num">R2</span>
+    <span class="pb-sec-title">Prospect Theory: An Analysis of Decision Under Risk</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose">
+      <p><strong>Authors:</strong> Daniel Kahneman &amp; Amos Tversky</p>
+      <p><strong>Source:</strong> <em>Econometrica, Vol. 47, No. 2, March 1979, pp. 263–291</em></p>
+      <p><strong>Recognition:</strong> Nobel Memorial Prize in Economic Sciences, 2002 · Robert J. Shiller called momentum work built on this "a bombshell paper"</p>
+    </div>
+    <div class="research-block" style="margin:0">
+      <div class="rb-header"><span class="rb-tag">FINDING</span></div>
+      <div class="rb-finding">Individuals systematically violate expected utility theory. Loss aversion — feeling losses approximately 2× more acutely than equivalent gains — causes the disposition effect: cutting winners too early and holding losers too long. Pre-trade checklists requiring documentation of both bullish and bearish evidence counteract confirmation bias. Predetermined exit criteria remove discretionary decision-making during emotionally charged moments.</div>
+      <div class="rb-impl"><strong>Playbook Application:</strong> Justifies the deterministic factory model. EdgeOS removing operator discretion from entry criteria is not a limitation — it is the behaviorally optimal design. The production lines decide qualification. The morning routine checklist counteracts confirmation bias. TC targets counteract the disposition effect by pre-committing to exit levels.</div>
+    </div>
+  </div>
+</div><div class="pb-sec page-section" id="R3">
+  <div class="pb-sec-hdr" style="border-left-color:#0050b3">
+    <span class="pb-sec-num">R3</span>
+    <span class="pb-sec-title">Secrets for Profiting in Bull and Bear Markets — Stage Analysis</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose">
+      <p><strong>Authors:</strong> Stan Weinstein</p>
+      <p><strong>Source:</strong> <em>McGraw-Hill, 1988. Validated by 35+ years of practitioner application and systematic academic replication</em></p>
+      <p><strong>Recognition:</strong> Foundation methodology for institutional swing trading worldwide · Complementary to dual-momentum strategies (Tamarisk Research, 2025)</p>
+    </div>
+    <div class="research-block" style="margin:0">
+      <div class="rb-header"><span class="rb-tag">FINDING</span></div>
+      <div class="rb-finding">Stocks cycle through four stages driven by supply and demand forces and institutional investor behaviour: Stage 1 (Accumulation), Stage 2 (Markup — where the majority of investment gains occur), Stage 3 (Distribution), Stage 4 (Decline). The 40-week/200-day moving average serves as the primary trend filter. Stage 2 breakouts from long bases on volume are the optimal entry point. Stage 4 stocks should be avoided entirely.</div>
+      <div class="rb-impl"><strong>Playbook Application:</strong> The Layer C production lines (B-C1 through S-C5) are a deterministic implementation of Weinstein's four-stage framework. EdgeOS removes the subjective element of stage identification by applying precise criteria (STAGE_abv50sma, STAGE_duration thresholds, volume tags). The result is consistent, auditable stage identification at scale.</div>
+    </div>
+  </div>
+</div><div class="pb-sec page-section" id="R4">
+  <div class="pb-sec-hdr" style="border-left-color:#8a6000">
+    <span class="pb-sec-num">R4</span>
+    <span class="pb-sec-title">A New Interpretation of Information Rate</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose">
+      <p><strong>Authors:</strong> John L. Kelly Jr.</p>
+      <p><strong>Source:</strong> <em>Bell System Technical Journal, Vol. 35, No. 4, 1956, pp. 917–926. Extended by MacLean, Thorp &amp; Ziemba (2011), The Kelly Capital Growth Investment Criterion, World Scientific.</em></p>
+      <p><strong>Recognition:</strong> Applied by Warren Buffett, Bill Gross, and institutional quant funds globally · Confirmed optimal by Monte Carlo simulation (Frontiers in Applied Mathematics and Statistics, 2020)</p>
+    </div>
+    <div class="research-block" style="margin:0">
+      <div class="rb-header"><span class="rb-tag">FINDING</span></div>
+      <div class="rb-finding">The Kelly Criterion determines the fraction of capital to risk per trade to maximise long-term geometric wealth growth: f* = (p/l)(1 − (1−p)/p × l/g). Full Kelly maximises growth but creates high drawdown. Fractional Kelly (half-Kelly at 50% of optimal) reduces volatility more than proportionally relative to expected growth, offering the optimal practical trade-off. Over-betting (risk more than Kelly) reliably leads to ruin over a large sample.</div>
+      <div class="rb-impl"><strong>Playbook Application:</strong> Multi-line conviction sizing is Kelly mathematics made operational. When three independent production lines agree on the same stock, the probability p of the outcome increases — raising the Kelly-optimal fraction. The 1% risk rule (applied to all tiers) represents a conservative fractional Kelly approach appropriate before personal win/loss ratios are established through journaling.</div>
+    </div>
+  </div>
+</div><div class="pb-sec page-section" id="R5">
+  <div class="pb-sec-hdr" style="border-left-color:#555555">
+    <span class="pb-sec-num">R5</span>
+    <span class="pb-sec-title">New Concepts in Technical Trading Systems — ATR Methodology</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose">
+      <p><strong>Authors:</strong> J. Welles Wilder Jr.</p>
+      <p><strong>Source:</strong> <em>Trend Research, 1978. ATR-based position sizing now standard in professional swing trading.</em></p>
+      <p><strong>Recognition:</strong> Average True Range remains the universal practitioner standard for volatility-adjusted stop placement</p>
+    </div>
+    <div class="research-block" style="margin:0">
+      <div class="rb-header"><span class="rb-tag">FINDING</span></div>
+      <div class="rb-finding">Stop-loss levels placed at technical invalidation points (support, resistance, moving average levels) produce superior outcomes versus arbitrary percentage stops. ATR-based stops adapt to actual volatility: high-volatility stocks receive wider stops in ATR units, low-volatility stocks receive tighter stops — maintaining consistent risk across all positions.</div>
+      <div class="rb-impl"><strong>Playbook Application:</strong> EdgeOS SATY (Swing ATR Trigger) system directly implements ATR-based trigger levels. The dip buy milestones (9/13-below system) and SATY trigger prices replace arbitrary stop placement with mathematically derived levels. Position size formula: Size = (Account × Risk%) ÷ (Stop Distance). This formula appears in every tier's playbook.</div>
+    </div>
+  </div>
+</div><div class="pb-sec page-section" id="R6">
+  <div class="pb-sec-hdr" style="border-left-color:#005a5a">
+    <span class="pb-sec-num">R6</span>
+    <span class="pb-sec-title">Trade Journal Research — Pattern Recognition in Systematic Trading</span>
+  </div>
+  <div class="pb-sec-body">
+    <div class="pb-prose">
+      <p><strong>Authors:</strong> Practitioner research synthesis (2025)</p>
+      <p><strong>Source:</strong> <em>Swing Trading Strategies: Complete Guide to Multi-Asset Market Analysis (2025) · Multiple institutional practitioner studies</em></p>
+      
+    </div>
+    <div class="research-block" style="margin:0">
+      <div class="rb-header"><span class="rb-tag">FINDING</span></div>
+      <div class="rb-finding">Systematic review of past trades improves pattern recognition accuracy by approximately 23–31% over six months. Detailed records of entry rationale, technical setups, emotional states, and post-trade analysis consistently correlate with improved long-term performance. The improvement compounds over time — each review cycle building on the previous.</div>
+      <div class="rb-impl"><strong>Playbook Application:</strong> The Weekly Review loop appears in all three tier playbooks and is designated non-negotiable. It is the mechanism through which operator skill compounds separately from financial results. The factory provides consistent output — only the operator's pattern recognition and process discipline improve over time. The journal is the vehicle.</div>
+    </div>
+  </div>
+</div><div class="caution-block" style="margin-top:24px">
+  <div class="caution-title">Research Application Disclaimer</div>
+  <p>The research cited in this playbook is applied to the EdgeOS trading context as educational reference material. Academic findings describe broad statistical effects across large samples and time periods. Individual trade outcomes will vary. Past performance of momentum strategies, stage analysis frameworks, and position sizing models does not guarantee future results. No information in this playbook constitutes financial advice. All trading decisions involve risk of loss.</p>
+  <p>The EdgeOS production lines are deterministic signal systems. Their output identifies stocks meeting specified criteria — it is not a recommendation to buy or sell any security. The operator is solely responsible for all capital allocation decisions.</p>
+</div></div>
+  </main>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  var t = localStorage.getItem('eos-pb-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+
+function toggleTheme(){
+  var h = document.documentElement;
+  var n = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  h.setAttribute('data-theme', n);
+  localStorage.setItem('eos-pb-theme', n);
+  document.getElementById('themeBtn').textContent = n === 'dark' ? '☀ Light' : '☾ Dark';
+}
+
+var _tab = 'career';
+function switchTab(id) {
+  _tab = id;
+  localStorage.setItem('eos-pb-tab', id);
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('panel-' + id);
+  var btn   = document.querySelector('[data-tab="' + id + '"]');
+  if (panel) panel.classList.add('active');
+  if (btn)   btn.classList.add('active');
+  buildSidebar(id);
+  document.getElementById('mainPane').scrollTop = 0;
+  var s = document.getElementById('srch');
+  if (s && s.value){ s.value = ''; doSearch(''); }
+}
+
+function buildSidebar(tabId){
+  var sb = document.getElementById('sbContent');
+  if (!sb) return;
+  sb.innerHTML = '';
+  var mp = document.getElementById('mainPane');
+  var panel = document.getElementById('panel-' + tabId);
+  if (!panel) return;
+
+  panel.querySelectorAll('.page-section').forEach(function(sec){
+    var hdr  = sec.querySelector('.pb-sec-hdr, .pb-hero');
+    if (!hdr) return;
+    var num   = (sec.querySelector('.pb-sec-num') || {textContent:''}).textContent.trim();
+    var title = (sec.querySelector('.pb-sec-title, .pb-hero-title') || {textContent:''}).textContent.trim();
+    if (!title) return;
+    var item = document.createElement('div');
+    item.className = 'sb-item';
+    item.innerHTML = (num ? '<span class="sb-item-num">'+num+'</span>' : '') +
+      '<span>' + title.slice(0, 36) + (title.length > 36 ? '…' : '') + '</span>';
+    item.addEventListener('click', function(){
+      document.querySelectorAll('.sb-item').forEach(function(x){ x.classList.remove('active'); });
+      item.classList.add('active');
+      var mr = mp.getBoundingClientRect();
+      var tr = sec.getBoundingClientRect();
+      mp.scrollTo({top: mp.scrollTop + (tr.top - mr.top) - 10, behavior:'smooth'});
+    });
+    sb.appendChild(item);
+  });
+}
+
+/* Scroll tracking */
+function initScrollTracking(){
+  var mp = document.getElementById('mainPane');
+  if (!mp) return;
+  mp.addEventListener('scroll', function(){
+    var st = mp.scrollTop + 60;
+    var panel = document.getElementById('panel-' + _tab);
+    if (!panel) return;
+    var secs = Array.from(panel.querySelectorAll('.page-section'));
+    var active = null;
+    secs.forEach(function(s){ if (s.offsetTop <= st) active = s; });
+    if (!active) return;
+    var items = Array.from(document.querySelectorAll('.sb-item'));
+    var title = (active.querySelector('.pb-sec-title,.pb-hero-title') || {textContent:''}).textContent.trim().slice(0,12).toLowerCase();
+    items.forEach(function(item){
+      item.classList.toggle('active', item.textContent.toLowerCase().indexOf(title) >= 0);
+    });
+  }, {passive:true});
+}
+
+/* Copy */
+function doCopy(el, text){
+  var done = function(){
+    el.classList.add('copied');
+    showToast(text.length > 36 ? text.slice(0,34)+'…' : text);
+    setTimeout(function(){ el.classList.remove('copied'); }, 1400);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(function(){ fbCopy(text, done); });
+  } else { fbCopy(text, done); }
+}
+function fbCopy(text, cb){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta); if(cb) cb();
+}
+function showToast(msg){
+  var t = document.getElementById('toast'); if(!t) return;
+  t.textContent = '✓ ' + msg; t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+
+/* Search */
+var _stimer;
+function doSearch(val){
+  val = (val||'').trim().toLowerCase();
+  var clr = document.getElementById('sc');
+  if(clr) clr.style.display = val ? 'block' : 'none';
+  document.querySelectorAll('mark.hl').forEach(function(m){ m.outerHTML = m.textContent; });
+  if(!val) return;
+  var panel = document.getElementById('panel-' + _tab);
+  if(!panel) return;
+  var walker = document.createTreeWalker(panel, NodeFilter.SHOW_TEXT, null, false);
+  var nodes = [], n;
+  while((n = walker.nextNode())){
+    if(!n.textContent.toLowerCase().includes(val)) continue;
+    var p = n.parentNode;
+    if(!p || p.tagName === 'MARK' || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') continue;
+    nodes.push(n);
+  }
+  nodes.forEach(function(n){
+    var text = n.textContent, lower = text.toLowerCase(), idx = lower.indexOf(val);
+    if(idx < 0) return;
+    var frag = document.createDocumentFragment(), last = 0;
+    while(idx >= 0){
+      frag.appendChild(document.createTextNode(text.slice(last, idx)));
+      var mark = document.createElement('mark'); mark.className = 'hl';
+      mark.textContent = text.slice(idx, idx + val.length);
+      frag.appendChild(mark);
+      last = idx + val.length; idx = lower.indexOf(val, last);
+    }
+    frag.appendChild(document.createTextNode(text.slice(last)));
+    try { n.parentNode.replaceChild(frag, n); } catch(e){}
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  var theme = document.documentElement.getAttribute('data-theme');
+  document.getElementById('themeBtn').textContent = theme === 'dark' ? '☀ Light' : '☾ Dark';
+
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ switchTab(btn.dataset.tab); });
+  });
+
+  document.addEventListener('click', function(e){
+    var chip = e.target.closest('[data-phrase]');
+    if(chip && chip.dataset.phrase){ doCopy(chip, chip.dataset.phrase); return; }
+  });
+
+  var srch = document.getElementById('srch');
+  if(srch){
+    srch.addEventListener('input', function(){
+      clearTimeout(_stimer);
+      _stimer = setTimeout(function(){ doSearch(srch.value); }, 180);
+    });
+    srch.addEventListener('keydown', function(e){ if(e.key==='Escape'){ srch.value=''; doSearch(''); } });
+  }
+  var sc = document.getElementById('sc');
+  if(sc) sc.addEventListener('click', function(){
+    var s=document.getElementById('srch'); if(s){ s.value=''; doSearch(''); s.focus(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.target.matches('input,textarea')) return;
+    if(e.key==='/'){ e.preventDefault(); var s=document.getElementById('srch'); if(s){ s.focus(); s.select(); } }
+    if(e.key==='T'||e.key==='t') toggleTheme();
+  });
+
+  initScrollTracking();
+  var saved = localStorage.getItem('eos-pb-tab') || 'career';
+  switchTab(saved);
+});
+</script>
+<script>
+function toggleSidebar(){
+  var sb=document.querySelector('.sidebar');
+  var ov=document.getElementById('sbOverlay');
+  if(!sb)return;
+  sb.classList.toggle('sb-open');
+  if(ov)ov.classList.toggle('open');
+}
+</script>
+</body>
+</html>
