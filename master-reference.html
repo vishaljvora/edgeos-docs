@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EdgeOS — Master Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   EdgeOS Master Reference — Design System
+   Finviz-faithful · IBM Plex · App-shell layout
+   Light (default) · Dark toggle · Desktop-first
+═══════════════════════════════════════════════════════ */
+:root{--font:'IBM Plex Sans',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace}
+
+[data-theme="light"]{
+  --bg:#f3f3f3;--panel:#ffffff;--panel2:#ebebeb;--panel3:#dcdcdc;
+  --hover:#ffffcc;--border:#cccccc;--border-l:#e4e4e4;
+  --text:#111111;--text2:#333333;--muted:#666666;--dim:#999999;
+  --green:#1a6e1a;--green-bg:#e8f5e9;
+  --blue:#0050b3;--blue-bg:#dceeff;
+  --amber:#8a6000;--amber-bg:#fffacd;
+  --red:#bb0000;--red-bg:#ffebee;
+  --teal:#005a5a;--teal-bg:#e0f5f5;
+  --topbar:#1a1a2e;--topbar-bd:#0050b3;
+  --chip-bg:#f0f0f0;--chip-bd:#c8c8c8;--chip-tx:#1a6e1a;
+  --chip-h:#ffffcc;--chip-hbd:#0050b3;--chip-htx:#0050b3;
+  --fn-bg:#f4f8ff;--fn-bd:#0050b3;
+  --code-bg:#f0f0f0;--code-tx:#0050b3;
+  --shadow:0 1px 2px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.05);
+  /* tier colours — light backgrounds only */
+  --career-c:#1a6e1a;--career-bg:#e8f5e9;--career-bd:#1a6e1a;
+  --inter-c:#0050b3;--inter-bg:#dceeff;--inter-bd:#0050b3;
+  --turtle-c:#8a6000;--turtle-bg:#fffacd;--turtle-bd:#8a6000;
+  /* component backgrounds — ALL must be light in light mode */
+  --hero-bg:#f0f4ff;--hero-bd:#b8c8e8;
+  --loop-bg:#f4f8ff;--loop-hd-bg:#dceeff;--loop-bd:#b0c8e8;
+  --ref-bg:#f0fff4;--ref-bd:#b8ddc8;
+  --warn-bg:#fffaed;--warn-bd:#e8cc80;
+  --toast-bg:#f0fff0;
+}
+[data-theme="dark"]{
+  --bg:#0d1117;--panel:#161b22;--panel2:#1c2128;--panel3:#21262d;
+  --hover:#21262d;--border:#30363d;--border-l:#1f262d;
+  --text:#e6edf3;--text2:#c9d1d9;--muted:#8b949e;--dim:#484f58;
+  --green:#3fb950;--green-bg:#0d2c1a;
+  --blue:#58a6ff;--blue-bg:#0d2240;
+  --amber:#e3b341;--amber-bg:#3d2f0a;
+  --red:#f85149;--red-bg:#3d1515;
+  --teal:#1eb8b8;--teal-bg:#0a2020;
+  --topbar:#010409;--topbar-bd:#1a4a90;
+  --chip-bg:#1c2128;--chip-bd:#30363d;--chip-tx:#3fb950;
+  --chip-h:#21262d;--chip-hbd:#58a6ff;--chip-htx:#58a6ff;
+  --fn-bg:#080f1c;--fn-bd:#58a6ff;
+  --code-bg:#1c2128;--code-tx:#58a6ff;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.3);
+  --career-c:#3fb950;--career-bg:#0d2c1a;--career-bd:#3fb950;
+  --inter-c:#58a6ff;--inter-bg:#0d2240;--inter-bd:#58a6ff;
+  --turtle-c:#e3b341;--turtle-bg:#3d2f0a;--turtle-bd:#e3b341;
+  --hero-bg:#141c30;--hero-bd:#1a4a90;
+  --loop-bg:#0a1020;--loop-hd-bg:#0d2240;--loop-bd:#1a3a60;
+  --ref-bg:#0a1c0a;--ref-bd:#1a4a2a;
+  --warn-bg:#1c1000;--warn-bd:#4a3000;
+  --toast-bg:#162a16;
+}
+
+/* ── RESET & BASE ──────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;transition:background .2s,color .2s}
+strong{font-weight:600}
+a{color:var(--blue);text-decoration:none}
+code{font-family:var(--mono);font-size:11.5px;color:var(--code-tx);background:var(--code-bg);padding:1px 4px;border-radius:3px}
+pre{font-family:var(--mono);font-size:11.5px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+::-webkit-scrollbar{width:6px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* ── APP SHELL ─────────────────────────────────── */
+.shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.content-row{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* ── TOPBAR ────────────────────────────────────── */
+.topbar{
+  flex-shrink:0;height:50px;
+  background:var(--topbar);border-bottom:2px solid var(--topbar-bd);
+  display:flex;align-items:center;gap:10px;padding:0 16px;
+  overflow:hidden;
+}
+.topbar-logo{font-family:var(--mono);font-size:14px;font-weight:700;color:#4da6ff;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;white-space:nowrap}
+.topbar-logo em{font-style:normal;font-size:9px;color:#7fcfff;letter-spacing:.14em;margin-left:8px;opacity:.7}
+
+/* Tab nav in topbar */
+.tab-nav{display:flex;gap:2px;flex:1;overflow:hidden;align-items:center;margin:0 12px}
+.tab-btn{
+  padding:6px 14px;border-radius:5px;border:1px solid transparent;
+  background:none;cursor:pointer;
+  font-family:var(--font);font-size:12px;font-weight:500;
+  color:rgba(255,255,255,.5);white-space:nowrap;
+  transition:all .14s;flex-shrink:0;
+}
+.tab-btn:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.08)}
+.tab-btn.active{font-weight:700;border-color:rgba(255,255,255,.25);color:#fff;background:rgba(255,255,255,.14)}
+/* Per-tab active colours */
+.tab-btn[data-tab="overview"].active{color:#7fff8a;background:rgba(63,185,80,.22);border-color:rgba(63,185,80,.45)}
+.tab-btn[data-tab="lines"].active   {color:#7fff8a;background:rgba(63,185,80,.22);border-color:rgba(63,185,80,.45)}
+.tab-btn[data-tab="regime"].active  {color:#f85149;background:rgba(248,81,73,.18);border-color:rgba(248,81,73,.4)}
+.tab-btn[data-tab="nlp"].active     {color:#9fcfff;background:rgba(88,166,255,.2);border-color:rgba(88,166,255,.45)}
+.tab-btn[data-tab="tags"].active    {color:#e3b341;background:rgba(227,179,65,.2);border-color:rgba(227,179,65,.45)}
+.tab-btn[data-tab="discord"].active {color:#bc8cff;background:rgba(188,140,255,.18);border-color:rgba(188,140,255,.4)}
+
+/* Search in topbar */
+.search-wrap{max-width:340px;min-width:160px;position:relative;flex-shrink:1}
+.search{
+  width:100%;padding:6px 26px 6px 26px;
+  border:1px solid rgba(255,255,255,.15);border-radius:4px;
+  background:rgba(255,255,255,.07);color:#e6edf3;
+  font-size:12px;font-family:var(--font);outline:none;
+  transition:border-color .15s;
+}
+.search:focus{border-color:#4da6ff}
+.search::placeholder{color:rgba(255,255,255,.28)}
+.si{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);font-size:12px;pointer-events:none}
+.sc{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.45);font-size:13px;display:none;cursor:pointer;padding:2px 3px;line-height:1}
+
+.topbar-right{display:flex;align-items:center;gap:7px;flex-shrink:0;margin-left:4px}
+.tb-pill{padding:2px 8px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:.06em;font-family:var(--mono);text-transform:uppercase;border:1px solid;flex-shrink:0}
+.pill-g{color:#3fb950;border-color:#3fb950;background:rgba(63,185,80,.12)}
+.pill-b{color:#4da6ff;border-color:#4da6ff;background:rgba(77,166,255,.12)}
+.pill-a{color:#e3b341;border-color:#e3b341;background:rgba(227,179,65,.12)}
+.tbtn{padding:5px 10px;background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);border-radius:4px;cursor:pointer;font-size:10px;font-family:var(--mono);white-space:nowrap;transition:all .15s}
+.tbtn:hover{border-color:#4da6ff;color:#4da6ff}
+
+/* ── SIDEBAR ────────────────────────────────────── */
+.sidebar{
+  flex-shrink:0;width:220px;
+  background:var(--panel);border-right:1px solid var(--border);
+  overflow-y:auto;overflow-x:hidden;padding:8px 0 32px;
+}
+.sb-hdr{padding:7px 12px 5px;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-family:var(--mono);border-bottom:1px solid var(--border-l);margin-bottom:4px}
+.sb-item{display:flex;align-items:baseline;gap:7px;padding:6px 12px;font-size:12px;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .1s;user-select:none}
+.sb-item:hover{background:var(--hover);color:var(--text);border-left-color:var(--border)}
+.sb-item.active{color:var(--sb-active,var(--blue));border-left-color:var(--sb-active,var(--blue));background:rgba(88,166,255,.08);font-weight:500}
+.sb-item-num{font-family:var(--mono);font-size:10px;color:var(--dim);flex-shrink:0;min-width:22px}
+
+/* ── MAIN PANE ──────────────────────────────────── */
+.main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
+.main::-webkit-scrollbar{width:6px}
+.tab-panel{display:none;padding:20px 24px 80px}
+.tab-panel.active{display:block}
+
+/* ── SEARCH HIGHLIGHT ───────────────────────────── */
+mark.hl{background:#fff59d;color:#111;border-radius:2px;padding:0 1px}
+[data-theme="dark"] mark.hl{background:#5a4a00;color:#ffe082}
+
+/* ── CHIPS ──────────────────────────────────────── */
+.chip,.nlp-chip{
+  display:inline-block;padding:4px 10px;
+  background:var(--chip-bg);border:1px solid var(--chip-bd);
+  border-radius:4px;font-family:var(--mono);font-size:11.5px;
+  font-weight:500;color:var(--chip-tx);cursor:pointer;
+  transition:all .1s;white-space:nowrap;
+}
+.chip:hover,.nlp-chip:hover{background:var(--chip-h);border-color:var(--chip-hbd);color:var(--chip-htx)}
+.chip:active,.nlp-chip:active{transform:scale(.97)}
+.chip.copied,.nlp-chip.copied{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+
+/* ── TOAST ──────────────────────────────────────── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--toast-bg);border:1px solid var(--green);color:var(--green);padding:7px 14px;border-radius:5px;font-family:var(--mono);font-size:12px;opacity:0;transform:translateY(6px);transition:opacity .18s,transform .18s;pointer-events:none;z-index:9999}
+[data-theme="light"] .toast{}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ══════════════════════════════
+   TAB 1: SYSTEM OVERVIEW
+══════════════════════════════ */
+.ov-hero{background:var(--hero-bg);border:1px solid #1a4a90;border-radius:8px;padding:20px 24px;margin-bottom:20px}
+[data-theme="light"] .ov-hero{background:linear-gradient(135deg,#e8f0ff,#eef2ff);border-color:#c0cce8}
+.ov-axioms{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.axiom{font-family:var(--mono);font-size:16px;font-weight:700;color:#7fcfff}
+[data-theme="light"] .axiom{color:#003a80}
+.axiom-dot{font-family:var(--mono);font-size:16px;color:rgba(127,207,255,.35)}
+[data-theme="light"] .axiom-dot{color:#99b}
+.ov-subtitle{font-size:13px;color:#9ab0c8;line-height:1.75}
+[data-theme="light"] .ov-subtitle{color:#3a4a5a}
+.ov-section{margin-bottom:20px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.ov-sec-title{padding:9px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:var(--panel2);border-bottom:1px solid var(--border);font-family:var(--mono)}
+
+.ov-stack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0;background:var(--border-l)}
+.stack-item{display:flex;align-items:baseline;gap:10px;padding:9px 16px;background:var(--panel);border-bottom:1px solid var(--border-l)}
+.stack-ltr{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--blue);width:16px;flex-shrink:0}
+.stack-name{font-weight:600;font-size:12.5px;flex-shrink:0;min-width:130px}
+.stack-desc{font-size:12px;color:var(--muted)}
+
+.two-fac-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.fac-card{padding:16px 18px;background:var(--panel)}
+.fac-card.bull-card{border-top:3px solid var(--green)}
+.fac-card.bear-card{border-top:3px solid var(--red)}
+.fac-card-hdr{font-size:13px;font-weight:700;margin-bottom:8px}
+.bull-card .fac-card-hdr{color:var(--green)}
+.bear-card .fac-card-hdr{color:var(--red)}
+.fac-card p{font-size:12.5px;color:var(--text2);line-height:1.75;margin-bottom:8px}
+.fac-note{font-size:12px;color:var(--muted);font-style:italic;border-left:2px solid var(--border);padding-left:10px;line-height:1.65}
+
+.doctrine-grid{padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:var(--panel)}
+.doc-item{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--text2);line-height:1.7}
+.doc-bullet{font-family:var(--mono);color:var(--blue);flex-shrink:0;margin-top:1px}
+
+.user-type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:var(--border)}
+.user-card{padding:16px 18px;background:var(--panel)}
+.career-card{border-top:3px solid var(--green)}
+.inter-card{border-top:3px solid var(--blue)}
+.turtle-card{border-top:3px solid var(--amber)}
+.uc-icon{font-size:22px;margin-bottom:6px}
+.uc-title{font-size:14px;font-weight:700;margin-bottom:2px}
+.career-card .uc-title{color:var(--green)}
+.inter-card .uc-title{color:var(--blue)}
+.turtle-card .uc-title{color:var(--amber)}
+.uc-years{font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:10px}
+.uc-detail{font-size:12px;color:var(--text2);margin-bottom:4px;line-height:1.6}
+.uc-example{margin-top:10px;padding:8px 10px;background:var(--panel2);border-radius:4px;font-size:11px;font-family:var(--mono);color:var(--muted);line-height:1.6}
+
+.cash-section{background:var(--amber-bg);border-color:var(--amber)}
+.cash-section .ov-sec-title{background:var(--amber-bg);color:var(--amber);border-bottom-color:var(--amber)}
+.cash-section p{padding:12px 16px;font-size:13px;color:var(--text2);line-height:1.75}
+
+/* ══════════════════════════════
+   TAB 2: PRODUCTION LINES
+══════════════════════════════ */
+.lines-section{margin-bottom:20px}
+.lines-sec-hdr{padding:9px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:6px 6px 0 0;font-family:var(--mono)}
+.bull-hdr{color:var(--green)}
+.bear-hdr{color:var(--red)}
+.lines-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden}
+.line-card{padding:12px 14px;background:var(--panel);border-left:3px solid transparent}
+.line-card.line-green{border-left-color:var(--green)}
+.line-card.line-blue{border-left-color:var(--blue)}
+.line-card.line-amber{border-left-color:var(--amber)}
+.line-card.line-red{border-left-color:var(--red)}
+.line-card.line-muted{border-left-color:var(--border)}
+.line-card-hdr{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
+.line-code{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted)}
+.line-card.line-green .line-code{color:var(--green)}
+.line-card.line-red    .line-code{color:var(--red)}
+.line-card.line-amber  .line-code{color:var(--amber)}
+.line-card.line-blue   .line-code{color:var(--blue)}
+.line-name{font-size:13px;font-weight:600;color:var(--text)}
+.line-desc{font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:6px}
+.line-criteria{font-size:11px;color:var(--muted);margin-bottom:5px}
+.crit-lbl{font-weight:700;color:var(--dim);font-family:var(--mono)}
+.line-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tag{display:inline-block;padding:3px 8px;border-radius:3px;font-family:var(--mono);font-size:11px;font-weight:600}
+.tag-hl{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
+.tag-warn{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber)}
+
+.conviction-block{padding:16px;background:var(--panel);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px}
+.conv-intro{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px}
+.conv-example{background:var(--panel2);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.conv-ex-title{padding:7px 14px;background:var(--blue-bg);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);font-family:var(--mono)}
+.conv-rows{padding:0 14px}
+.conv-row{display:grid;grid-template-columns:60px 200px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--border-l);align-items:baseline;font-size:12.5px}
+.conv-row:last-of-type{border-bottom:none}
+.conv-line-code{font-family:var(--mono);font-weight:700;color:var(--blue)}
+.conv-line-name{font-weight:600;color:var(--text)}
+.conv-line-why{color:var(--muted)}
+.conv-conclusion{padding:10px 14px;background:var(--green-bg);border-top:1px solid var(--border-l);font-size:12.5px;color:var(--text2);line-height:1.65;font-weight:500}
+
+.shelf-table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--panel);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden}
+.shelf-table th{padding:7px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);background:var(--panel2);border-bottom:2px solid var(--border);text-align:left;font-family:var(--mono)}
+.shelf-table td{padding:8px 12px;border-bottom:1px solid var(--border-l);vertical-align:top}
+.shelf-table tr:last-child td{border-bottom:none}
+.shelf-table tr:hover td{background:var(--hover)}
+.sc-g{color:var(--green);font-family:var(--mono);font-weight:700;font-size:12px}
+.sc-b{color:var(--blue);font-family:var(--mono);font-weight:700;font-size:12px}
+.sc-r{color:var(--red);font-family:var(--mono);font-weight:700;font-size:12px}
+.sc-a{color:var(--amber);font-family:var(--mono);font-weight:700;font-size:12px}
+.sc-m{color:var(--muted);font-family:var(--mono);font-weight:700;font-size:12px}
+
+/* ══════════════════════════════
+   TAB 3: REGIME
+══════════════════════════════ */
+.regime-section{margin-bottom:20px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.reg-sec-title{padding:9px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:var(--panel2);border-bottom:1px solid var(--border);font-family:var(--mono)}
+.regime-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.regime-table th{padding:7px 14px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);background:var(--panel2);border-bottom:2px solid var(--border);text-align:left;font-family:var(--mono)}
+.regime-table td{padding:10px 14px;border-bottom:1px solid var(--border-l);vertical-align:top;background:var(--panel)}
+.regime-table tr:last-child td{border-bottom:none}
+.regime-table tr:hover td{background:var(--hover)}
+.reg-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em}
+.bg-g{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
+.bg-b{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue)}
+.bg-a{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber)}
+.bg-r{background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
+.rf-bull{color:var(--green);font-weight:600;font-size:12.5px}
+.rf-bear{color:var(--red);font-weight:600;font-size:12.5px}
+
+.axti-block{padding:16px 18px;background:var(--panel)}
+.axti-quote{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--amber);margin-bottom:10px;line-height:1.5}
+.axti-block p{font-size:13px;color:var(--text2);line-height:1.75}
+
+.cash-doctrine{padding:16px 18px;background:var(--panel)}
+.cash-doctrine p{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:8px}
+.cash-doctrine p:last-child{margin-bottom:0}
+
+.princ-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);padding:0;background:var(--panel)}
+.princ-item{display:grid;grid-template-columns:170px 1fr;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border-l)}
+.princ-item:last-child{border-bottom:none}
+.princ-title{font-weight:700;font-size:12px;color:var(--amber);line-height:1.5}
+.princ-desc{font-size:12px;color:var(--text2);line-height:1.65}
+
+/* ══════════════════════════════
+   TAB 4: NLP
+══════════════════════════════ */
+.nlp-container{display:flex;flex-direction:column;gap:24px}
+.nlp-section{}
+.nlp-sec-hdr{display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--panel2);border:1px solid var(--border);border-radius:6px 6px 0 0;border-left:4px solid;font-size:13px;font-weight:700;color:var(--text)}
+.nlp-sec-num{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.nlp-subsec-hdr{padding:7px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--amber);background:var(--panel2);border:1px solid var(--border);border-top:none;font-family:var(--mono)}
+
+.nlp-table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden}
+.nlp-table thead th{position:sticky;top:0;padding:6px 12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:var(--panel2);border-bottom:2px solid var(--border);text-align:left;font-family:var(--mono)}
+.nlp-row{border-bottom:1px solid var(--border-l)}
+.nlp-row:last-child{border-bottom:none}
+.nlp-row:hover td{background:var(--hover)}
+.nlp-phrases{padding:8px 12px;vertical-align:top;width:38%}
+.nlp-chip{margin:2px 3px 2px 0;display:inline-block;font-size:11.5px;padding:4px 9px;font-weight:500}
+.nlp-arrow{padding:10px 8px;text-align:center;color:var(--dim);font-family:var(--mono);font-size:13px;font-weight:700;vertical-align:top;width:28px}
+.nlp-field{padding:8px 12px;vertical-align:top}
+.nlp-field code{font-size:11.5px;color:var(--blue);background:none;padding:0;font-weight:500}
+.nlp-note{margin-top:5px;font-size:11px;color:var(--dim);font-style:italic;font-family:var(--font)}
+
+/* Paired opposites */
+.opp-table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px}
+.opp-table th{padding:7px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);background:var(--panel2);border-bottom:2px solid var(--border);font-family:var(--mono)}
+.opp-long-hdr{color:var(--green)!important}
+.opp-short-hdr{color:var(--red)!important}
+.opp-table td{padding:8px 12px;border-bottom:1px solid var(--border-l);font-size:13px;font-weight:700}
+.opp-table tr:last-child td{border-bottom:none}
+.opp-long{color:var(--green);font-family:var(--mono)}
+.opp-short{color:var(--red);font-family:var(--mono)}
+.opp-long-f,.opp-short-f{font-family:var(--mono);font-size:11.5px;color:var(--muted);font-weight:400}
+.opp-vs-hdr{text-align:center}
+.opp-field-row td{font-weight:400;border-bottom:2px solid var(--border-l)}
+
+/* Rules */
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-top:none}
+.rules-col{background:var(--panel);padding:14px 16px}
+.rules-col-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border-l)}
+.must-col .rules-col-title{color:var(--green)}
+.never-col .rules-col-title{color:var(--red)}
+.rule-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-l);font-size:12.5px}
+.rule-item:last-child{border-bottom:none}
+.rule-n{font-family:var(--mono);font-size:10px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.must-item .rule-n{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
+.never-item .rule-n{background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
+.fmt-block{border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden}
+.fmt-title{padding:7px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);background:var(--panel2);font-family:var(--mono);border-bottom:1px solid var(--border-l)}
+.fmt-pre{padding:14px 16px;background:var(--panel);color:var(--text2);font-size:12px}
+
+/* NLP sidebar */
+.nlp-sb-item{display:flex;align-items:baseline;gap:7px;padding:5px 12px;font-size:11.5px;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .1s;text-decoration:none}
+.nlp-sb-item:hover{background:var(--hover);color:var(--text);border-left-color:var(--nlp-c,var(--border))}
+.nlp-sb-item.active{color:var(--nlp-c,var(--blue));border-left-color:var(--nlp-c,var(--blue));background:var(--blue-bg);font-weight:500}
+.nlp-sb-num{font-family:var(--mono);font-size:10px;color:var(--dim);min-width:22px;flex-shrink:0}
+.nlp-sb-lbl{font-size:11.5px}
+
+/* ══════════════════════════════
+   TAB 5: TAGS
+══════════════════════════════ */
+.tags-section{margin-bottom:20px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.tags-sec-title{padding:9px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;background:var(--panel2);border-bottom:1px solid var(--border);font-family:var(--mono)}
+.tag-title-hl{color:var(--green)}
+.tag-title-warn{color:var(--amber)}
+.tag-title-mon{color:var(--blue)}
+.tags-grid{background:var(--panel);padding:0}
+.tag-row{display:grid;grid-template-columns:220px 1fr;gap:12px;padding:9px 16px;border-bottom:1px solid var(--border-l);align-items:baseline;font-size:12.5px}
+.tag-row:last-child{border-bottom:none}
+.tag-row:hover{background:var(--hover)}
+.tag-name{font-family:var(--mono);font-size:11.5px;font-weight:600;display:inline-block;padding:2px 8px;border-radius:3px;border:1px solid}
+.tag-name.tag-hl{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+.tag-name.tag-warn{background:var(--amber-bg);color:var(--amber);border-color:var(--amber)}
+.tag-name.tag-mon{background:var(--blue-bg);color:var(--blue);border-color:var(--blue)}
+.tag-desc{color:var(--text2)}
+
+.conv-matrix{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px}
+.conv-matrix th{padding:7px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);background:var(--panel2);border-bottom:2px solid var(--border);text-align:left;font-family:var(--mono)}
+.conv-matrix td{padding:10px 14px;border-bottom:1px solid var(--border-l);font-size:12.5px}
+.conv-matrix tr:last-child td{border-bottom:none}
+.conv-matrix tr:hover td{background:var(--hover)}
+.cv-low{color:var(--muted);font-weight:600;font-family:var(--mono)}
+.cv-med{color:var(--blue);font-weight:600;font-family:var(--mono)}
+.cv-high{color:var(--green);font-weight:600;font-family:var(--mono)}
+.cv-max{color:var(--amber);font-weight:700;font-family:var(--mono)}
+
+/* ══════════════════════════════
+   TAB 6: DISCORD
+══════════════════════════════ */
+.disc-intro{padding:13px 18px;font-size:13px;color:var(--text2);background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:18px;line-height:1.7}
+.disc-intro code{font-family:var(--mono);font-size:12px;color:var(--blue);background:var(--blue-bg);padding:1px 6px;border-radius:3px}
+.disc-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.disc-group{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--dg-light,var(--border));border-radius:0 6px 6px 0;overflow:hidden}
+[data-theme="dark"] .disc-group{border-left-color:var(--dg-dark,var(--border))}
+.disc-grp-title{
+  padding:8px 14px;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;font-family:var(--mono);border-bottom:1px solid var(--border-l);
+  color:var(--dg-light,var(--muted));
+  background:var(--panel2);
+}
+[data-theme="dark"] .disc-grp-title{color:var(--dg-dark,var(--muted))}
+.disc-cmds{padding:8px 12px;display:flex;flex-direction:column;gap:5px}
+.disc-cmd{
+  display:block;width:100%;padding:8px 12px;
+  background:var(--bg);border:1px solid var(--border);border-radius:4px;
+  font-family:var(--mono);font-size:12.5px;font-weight:500;
+  color:var(--text2);text-align:left;cursor:pointer;
+  transition:background .1s,border-color .1s,color .1s;
+}
+.disc-cmd:hover{
+  background:var(--hover);
+  border-color:var(--dg-light,var(--blue));
+  color:var(--dg-light,var(--blue));
+}
+[data-theme="dark"] .disc-cmd:hover{
+  border-color:var(--dg-dark,var(--blue));
+  color:var(--dg-dark,var(--blue));
+}
+.disc-cmd:active{transform:scale(.98)}
+.disc-cmd.copied{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-logo">EdgeOS <em>MASTER REFERENCE</em></div>
+
+  <nav class="tab-nav" aria-label="Sections">
+    <button class="tab-btn" data-tab="overview">System Overview</button><button class="tab-btn" data-tab="lines">Production Lines</button><button class="tab-btn" data-tab="regime">Regime & Factory</button><button class="tab-btn" data-tab="nlp">NLP Language Map</button><button class="tab-btn" data-tab="tags">Tags & Conviction</button><button class="tab-btn" data-tab="discord">Discord Commands</button>
+  </nav>
+
+  <div class="search-wrap">
+    <span class="si">⌕</span>
+    <input class="search" id="srch" type="text"
+      placeholder="Search… ( / )"
+      autocomplete="off" spellcheck="false">
+    <button class="sc" id="srch-clear" title="Clear (Esc)">✕</button>
+  </div>
+
+  <div class="topbar-right">
+    <span class="tb-pill pill-g">24 Lines</span>
+    <span class="tb-pill pill-b">709 Phrases</span>
+    <span class="tb-pill pill-a">v2.0</span>
+    <button class="tbtn" onclick="toggleTheme()" id="themeBtn">☾ Dark</button>
+  </div>
+</header>
+
+<!-- CONTENT ROW -->
+<div class="content-row">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-hdr">Contents</div>
+    <div id="sbContent"></div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main" id="mainPane">
+    <div class="tab-panel" id="panel-overview"><div class="ov-hero">
+  <div class="ov-axioms">
+    <span class="axiom">Process over outcome.</span>
+    <span class="axiom-dot">·</span>
+    <span class="axiom">Setups over stocks.</span>
+    <span class="axiom-dot">·</span>
+    <span class="axiom">Price is the ultimate truth.</span>
+  </div>
+  <p class="ov-subtitle">The Trade Factory is a deterministic production system that runs 24/7/365. It is the factory floor, production monitoring system, and quality control layer combined. The operator manages by whether the factory is running correctly — never by results.</p>
+</div><div class="ov-section">
+  <div class="ov-sec-title">Signal Stack — Layer A through J</div>
+  <div class="ov-stack-grid">
+    <div class="stack-item"><span class="stack-ltr">A</span><span class="stack-name">SCTR</span><span class="stack-desc">StockCharts Technical Rank — relative momentum score</span></div>
+    <div class="stack-item"><span class="stack-ltr">B</span><span class="stack-name">L/S Momentum</span><span class="stack-desc">Long/short count cycles — ignition through exhaustion</span></div>
+    <div class="stack-item"><span class="stack-ltr">C</span><span class="stack-name">Stage Structure</span><span class="stack-desc">Weinstein stage (1B, 2A, 2B, 3A, 3B, 4A, 4B, 4C)</span></div>
+    <div class="stack-item"><span class="stack-ltr">D</span><span class="stack-name">SATY</span><span class="stack-desc">ATR-based trigger levels across 4 timeframes</span></div>
+    <div class="stack-item"><span class="stack-ltr">E</span><span class="stack-name">RSVA</span><span class="stack-desc">Relative strength vs SPY — outperforming / weakening</span></div>
+    <div class="stack-item"><span class="stack-ltr">F</span><span class="stack-name">Regime</span><span class="stack-desc">Market regime — Bull / Strengthening / Chop / Bear</span></div>
+    <div class="stack-item"><span class="stack-ltr">G</span><span class="stack-name">Campaign</span><span class="stack-desc">Open position tracking — trigger, targets, gain</span></div>
+    <div class="stack-item"><span class="stack-ltr">H</span><span class="stack-name">Deterioration</span><span class="stack-desc">9/13-below counter system — v1/v2/v3 counters</span></div>
+    <div class="stack-item"><span class="stack-ltr">I</span><span class="stack-name">Move Shape</span><span class="stack-desc">Extension ATR distance from key moving averages</span></div>
+    <div class="stack-item"><span class="stack-ltr">J</span><span class="stack-name">MAXEX/EXT</span><span class="stack-desc">Maximum extension scoring — room-to-run quantified</span></div>
+  </div>
+</div><div class="ov-section">
+  <div class="ov-sec-title">Two Factories — Always Running</div>
+  <div class="two-fac-row">
+    <div class="fac-card bull-card">
+      <div class="fac-card-hdr">🟢 Bullish Setup Factory</div>
+      <p>Continuously produces qualified long trade ideas from the universe of stocks. Authorization: runs at all times. Regime changes the weight the operator assigns to output — not whether it runs.</p>
+      <div class="fac-note">A bullish setup in a bear market is not noise. It is a signal worth investigating. <strong>Why is there a party here while everyone else is going to hell?</strong> Price always knows first.</div>
+    </div>
+    <div class="fac-card bear-card">
+      <div class="fac-card-hdr">🔴 Bearish Setup Factory</div>
+      <p>Continuously produces qualified short trade ideas. Authorization: runs at all times. Market regime determines deployment intensity — bear market = full authorization on all bearish lines.</p>
+      <div class="fac-note">Stocks are raw material. Setups are the product. The operator is never loyal to a stock — only to the setup it produced.</div>
+    </div>
+  </div>
+</div><div class="ov-section">
+  <div class="ov-sec-title">Design Doctrine — EdgeOS computes. Claude communicates.</div>
+  <div class="doctrine-grid">
+    <div class="doc-item"><span class="doc-bullet">→</span><span>The deterministic pipeline is the sole authority. Claude translates natural language into valid EdgeOS queries.</span></div>
+    <div class="doc-item"><span class="doc-bullet">→</span><span>Claude explains, organizes, summarizes, tutors. Claude never invents values, never computes signals, never replaces the engine.</span></div>
+    <div class="doc-item"><span class="doc-bullet">→</span><span>Every phrase maps to a specific EdgeOS query, field, or output. No phrase causes Claude to reason from inference instead of database.</span></div>
+    <div class="doc-item"><span class="doc-bullet">→</span><span>If the database returns nothing, Claude says so clearly. Never fabricate scan results. "No stocks match this criteria today" is a legitimate output.</span></div>
+  </div>
+</div><div class="ov-section">
+  <div class="ov-sec-title">Three User Types</div>
+  <div class="user-type-grid">
+    <div class="user-card career-card">
+      <div class="uc-icon">⚙</div>
+      <div class="uc-title">Career Swing Trader</div>
+      <div class="uc-years">10+ years</div>
+      <div class="uc-detail"><strong>Uses:</strong> Factory language, count language, stage, SATY, TC targets, prior cycles</div>
+      <div class="uc-detail"><strong>Expects:</strong> Concise, data-first. Already knows what signals mean.</div>
+      <div class="uc-detail"><strong>Wants:</strong> Fast confirmation, ranked output, contradiction flags</div>
+      <div class="uc-example">"who is at the party in energy" → immediate ranked output</div>
+    </div>
+    <div class="user-card inter-card">
+      <div class="uc-icon">🔗</div>
+      <div class="uc-title">Intermediate Trader</div>
+      <div class="uc-years">3–5 years</div>
+      <div class="uc-detail"><strong>Uses:</strong> Mix of technical and plain language</div>
+      <div class="uc-detail"><strong>Expects:</strong> Output with brief context explaining why</div>
+      <div class="uc-detail"><strong>Wants:</strong> To understand why something qualified</div>
+      <div class="uc-example">"show me stage 2A breakouts" → output + note on what makes each a breakout</div>
+    </div>
+    <div class="user-card turtle-card">
+      <div class="uc-icon">🐢</div>
+      <div class="uc-title">Turtle / Junior Trader</div>
+      <div class="uc-years">New to EdgeOS</div>
+      <div class="uc-detail"><strong>Uses:</strong> Plain English, may not know system language yet</div>
+      <div class="uc-detail"><strong>Expects:</strong> Education alongside every output</div>
+      <div class="uc-detail"><strong>Wants:</strong> To learn the system while using it</div>
+      <div class="uc-example">"what should I look at today" → full briefing + regime explanation in plain terms</div>
+    </div>
+  </div>
+</div><div class="ov-section cash-section">
+  <div class="ov-sec-title" style="color:var(--amber)">Cash Is a Valid Factory Output</div>
+  <p>When the factory's production lines produce no qualified setups, cash is the legitimate output. This is not a failure state — the factory is correctly telling the operator that today's raw material does not meet production standards. Forcing trades when the factory has nothing to produce is running the line with substandard raw material. The output will be defective.</p>
+  <p style="margin-top:10px"><strong>If there are no setups, there are no trades. Cash preserves capital for when the lines are running.</strong></p>
+</div></div><div class="tab-panel" id="panel-lines"><div class="lines-section"><div class="lines-sec-hdr bull-hdr">Long Lines — Layer B (Momentum)</div>
+<div class="lines-grid">
+<div class="line-card line-green" id="line-b1">
+  <div class="line-card-hdr">
+    <span class="line-code">B1</span>
+    <span class="line-name">Fresh Ignition</span>
+  </div>
+  <div class="line-desc">Momentum just started. Count = 1. Earliest entry in a new cycle. Investigate bear-regime ignitions — AXTI principle.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>L_momo_ct = 1 AND L_momo_active = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="AXTI principle — investigate why">_regime</span><span class="tag tag-warn" title="structure confirms momentum">_2a</span><span class="tag tag-warn" title="multi-line conviction">_bull</span><span class="tag tag-warn" title="sector ETF also on ignition line">_leader</span></div>
+</div>
+<div class="line-card line-green" id="line-b2">
+  <div class="line-card-hdr">
+    <span class="line-code">B2</span>
+    <span class="line-name">Bull Progression</span>
+  </div>
+  <div class="line-desc">Momentum is running. Count 2–8. Let the trade work. Position exists in the count.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>L_momo_ct &gt;= 2 AND L_momo_ct &lt;= 8 AND L_momo_active = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="ct 2-4, maximum runway">_progression</span><span class="tag tag-warn" title="ct 5-7, running strong">_progression</span><span class="tag tag-warn" title="ct = 7, next bar may be pink">_8</span></div>
+</div>
+<div class="line-card line-amber" id="line-b3">
+  <div class="line-card-hdr">
+    <span class="line-code">B3</span>
+    <span class="line-name">Exhaustion Watch</span>
+  </div>
+  <div class="line-desc">Count approaching 9 or 13. Start managing risk. The next bar may be exhaustion.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>L_momo_ct IN (8, 12) AND is_approaching_exhaustion = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="ct = 8, next bar = 9">_exh</span><span class="tag tag-warn" title="ct = 12, next bar = 13">_exh</span><span class="tag tag-warn" title="count running past first exhaustion">_9</span></div>
+</div>
+<div class="line-card line-amber" id="line-b4">
+  <div class="line-card-hdr">
+    <span class="line-code">B4</span>
+    <span class="line-name">Exhaustion</span>
+  </div>
+  <div class="line-desc">Count at 9 or 13. First or terminal exhaustion signal. Exit plan required.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>L_momo_9above = True OR L_momo_13above = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="ct = 9">_exhaustion</span><span class="tag tag-warn" title="ct = 13">_exhaustion</span><span class="tag tag-warn" title="price near SATY ATR target">_proximity</span><span class="tag tag-warn" title="EXT_any_exh = True simultaneously">_exhausted</span></div>
+</div>
+<div class="line-card line-blue" id="line-b5">
+  <div class="line-card-hdr">
+    <span class="line-code">B5</span>
+    <span class="line-name">Strict Dip Buy (9-13 Below)</span>
+  </div>
+  <div class="line-desc">Prior leader pulled back to the 9/13/21-bar below window. Milestone hit on this day.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>9_13below_signal_v2 transitions to milestone on this day
+  9below   → fires on day counter reaches 9
+  13below  → fires </code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="SATY intra triggered same day">_hand</span><span class="tag tag-warn" title="L_momo_ct = 1 same day (strongest confirmation)">_fired</span><span class="tag tag-warn" title="appeared during MKT_regime = Bear">_leader</span><span class="tag tag-warn" title="v3 = 0, launch zone held (→ strong leader)">_zero</span><span class="tag tag-warn" title="v3 &gt; 0, launch zone breached (caution)">_active</span><span class="tag tag-warn" title="sector ETF SCTR still positive">_holding</span></div>
+</div>
+<div class="line-card line-blue" id="line-b6">
+  <div class="line-card-hdr">
+    <span class="line-code">B6</span>
+    <span class="line-name">Strong Leader Dip Buy</span>
+  </div>
+  <div class="line-desc">Cleanest dip buy. Never violated the launch zone. No deep counter active.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>is_strong_leader_dip_buy = True
+  (is_dip_buy_candidate = True AND 9_13below_ct_v3 = 0)</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="L_momo_ic1/ic2/ic3 for TC sizing">_expansion</span><span class="tag tag-warn" title="3 prior cycles available for TC1/2/3">_cycles</span><span class="tag tag-warn" title="appeared during broad market weakness">_leader</span></div>
+</div>
+<div class="line-card line-green" id="line-b7">
+  <div class="line-card-hdr">
+    <span class="line-code">B7</span>
+    <span class="line-name">SATY Bullish</span>
+  </div>
+  <div class="line-desc">Price above ATR trigger level. One or more timeframes in bullish_triggered state.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>One or more SATY modes in bullish_triggered state</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="SATY_intra_state = bullish_triggered">_only</span><span class="tag tag-warn" title="SATY_multid_state = bullish_triggered (primary)">_triggered</span><span class="tag tag-warn" title="SATY_swing_state = bullish_triggered">_triggered</span><span class="tag tag-warn" title="SATY_pos_state = bullish_triggered">_triggered</span><span class="tag tag-warn" title="SATY_mtf_bull &gt;= 3">_aligned</span><span class="tag tag-warn" title="SATY_mtf_bull = 4 (maximum conviction)">_aligned</span><span class="tag tag-warn" title="trg_dist_bull between -1% and +1%">_trigger</span><span class="tag tag-warn" title="tgt_dist_bull &gt;= 5%">_target</span></div>
+</div>
+<div class="line-card line-green" id="line-b8">
+  <div class="line-card-hdr">
+    <span class="line-code">B8</span>
+    <span class="line-name">SCTR Resurrection</span>
+  </div>
+  <div class="line-desc">SCTR crossed from negative to positive. Resurrection. Earliest signal of new life.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>yesterday_SCTR &lt; 0 AND today_SCTR &gt;= 0
+  AND z_score &gt;= threshold \[default: 1.5 std devs — operator configurable]</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="rel_volume &gt;= 2.0">_surge</span><span class="tag tag-warn" title="STAGE moving toward 2A">_improving</span><span class="tag tag-warn" title="AXTI principle — highest investigation priority">_resurrection</span><span class="tag tag-warn" title="volume + gap combination">_likely</span></div>
+</div>
+<div class="line-card line-green" id="line-b9">
+  <div class="line-card-hdr">
+    <span class="line-code">B9</span>
+    <span class="line-name">SCTR Acceleration</span>
+  </div>
+  <div class="line-desc">SCTR accelerating with significant z-score. Momentum building before count fires.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>z_score &gt;= threshold \[default: 1.5] AND today_SCTR &gt; 0</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="L_momo_ct &gt; 0, acceleration within cycle">_count</span><span class="tag tag-warn" title="L_momo_ct = 0, SCTR building before count fires">_count</span><span class="tag tag-warn" title="sector ETF also showing velocity">_accelerating</span><span class="tag tag-warn" title="rel_volume &gt;= 1.5 same day">_confirmed</span></div>
+</div>
+</div></div>
+<div class="lines-section"><div class="lines-sec-hdr bull-hdr">Long Lines — Layer C (Stage Structure)</div>
+<div class="lines-grid">
+<div class="line-card line-muted" id="line-bc1">
+  <div class="line-card-hdr">
+    <span class="line-code">B-C1</span>
+    <span class="line-name">Stage 1B Base Watch</span>
+  </div>
+  <div class="line-desc">Stage 1B. Base forming. Not a trade — monitoring only. Waiting for B-C2.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE = 1B</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="base has had time to form">bars</span><span class="tag tag-warn" title="price compressed near 50SMA">True</span><span class="tag tag-warn" title="price oscillates above and below in 1B">either</span><span class="tag tag-warn" title="STAGE_duration &gt;= 30 bars">_base</span><span class="tag tag-warn" title="price moved above all MAs in base">_mas</span><span class="tag tag-warn" title="MA spread compressing">_tightening</span><span class="tag tag-warn" title="volume on up days &gt; volume on down days">_constructive</span><span class="tag tag-warn" title="sector ETF SCTR &gt; 8">_strong</span></div>
+</div>
+<div class="line-card line-green" id="line-bc2">
+  <div class="line-card-hdr">
+    <span class="line-code">B-C2</span>
+    <span class="line-name">Stage 2A Breakout</span>
+  </div>
+  <div class="line-desc">Stage 2A. Breakout from base. Maximum conviction on days 1–5. Tiger in the tank.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE = 2A AND STAGE_bull = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="price above 50SMA confirmed">True</span><span class="tag tag-warn" title="STAGE_duration &lt;= 5 bars AND breakout = True">_breakout</span><span class="tag tag-warn" title="breakout = True AND prior Stage 1B duration long">_break</span><span class="tag tag-warn" title="price above all MAs with positive slope">_breakout</span><span class="tag tag-warn" title="gap up on volume at or near breakout">_tank</span><span class="tag tag-warn" title="rel_volume &gt;= 2.0 on breakout day">_2x</span><span class="tag tag-warn" title="rel_volume &gt;= 3.0 on breakout day">_3x</span><span class="tag tag-warn" title="STAGE_duration &gt;= 10 bars (not fresh breakout)">_advance</span></div>
+</div>
+<div class="line-card line-blue" id="line-bc3">
+  <div class="line-card-hdr">
+    <span class="line-code">B-C3</span>
+    <span class="line-name">Stage 2A Pullback Re-entry</span>
+  </div>
+  <div class="line-desc">Stage 2A pullback. Price basing near 50SMA support. Re-entry while uptrend intact.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE = 2A AND basing = True AND STAGE_bull = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="trend established before pullback">bars</span><span class="tag tag-warn" title="still above 50SMA">True</span><span class="tag tag-warn" title="STAGE_ATRx between 0 and 1.0">_50sma</span><span class="tag tag-warn" title="10ext_ATRx between 0 and 0.5 AND basing = True">_10week</span><span class="tag tag-warn" title="prior gap now acting as support">_support</span><span class="tag tag-warn" title="volume constructive on support day">_buying</span><span class="tag tag-warn" title="L_momo_ct &gt;= 1 simultaneously">_active</span><span class="tag tag-warn" title="SATY_multid_state = bullish_triggered">_triggered</span></div>
+</div>
+<div class="line-card line-green" id="line-bc4">
+  <div class="line-card-hdr">
+    <span class="line-code">B-C4</span>
+    <span class="line-name">Stage 2B Established Advance</span>
+  </div>
+  <div class="line-desc">Stage 2B. Established advance. Higher selectivity required — uptrend is mature.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE = 2B AND STAGE_bull = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="trend well established \[assumption]">bars</span><span class="tag tag-warn" title="breakout = True within Stage 2B">_breakout</span><span class="tag tag-warn" title="gap up on volume within Stage 2B">_tank</span><span class="tag tag-warn" title="L_momo_ct &gt;= 4 AND L_momo_active = True">_strong</span><span class="tag tag-warn" title="50ext_state = Approaching">_moderate</span><span class="tag tag-warn" title="50ext_state = Extended">_warning</span><span class="tag tag-warn" title="STAGE_duration &gt;= 60 bars (long advance, be selective)">_2</span></div>
+</div>
+<div class="line-card line-muted" id="line-bc5">
+  <div class="line-card-hdr">
+    <span class="line-code">B-C5</span>
+    <span class="line-name">Stage 2C/2D Recovery</span>
+  </div>
+  <div class="line-desc">Stage 2C/2D. Extended recovery. Only support_200day + tight_stop tag qualifies.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE IN (2C, 2D) AND STAGE_bull = True AND basing = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="200ext_ATRx between 0 and 1.0">_200day</span><span class="tag tag-warn" title="price tested 200SMA and held">_held</span><span class="tag tag-warn" title="50ext_state was Exhausted before pullback">_prior</span><span class="tag tag-warn" title="STAGE_ATRx &lt; 0.5 (very near MA, clean stop)">_required</span></div>
+</div>
+</div></div>
+<div class="lines-section"><div class="lines-sec-hdr bear-hdr">Short Lines — Layer B (Momentum)</div>
+<div class="lines-grid">
+<div class="line-card line-red" id="line-s1">
+  <div class="line-card-hdr">
+    <span class="line-code">S1</span>
+    <span class="line-name">Bear Ignition</span>
+  </div>
+  <div class="line-desc">Short momentum just started. Bear ignition. Count = 1 on the short side.</div>
+  
+  
+</div>
+<div class="line-card line-red" id="line-s2">
+  <div class="line-card-hdr">
+    <span class="line-code">S2</span>
+    <span class="line-name">Bear Progression</span>
+  </div>
+  <div class="line-desc">Short count running. Bear progression. Let the short trade work.</div>
+  
+  
+</div>
+<div class="line-card line-red" id="line-s3">
+  <div class="line-card-hdr">
+    <span class="line-code">S3</span>
+    <span class="line-name">Campaign Breakdown</span>
+  </div>
+  <div class="line-desc">Prior long leader collapsing into short momentum. Highest conviction short signal.</div>
+  
+  
+</div>
+<div class="line-card line-red" id="line-s4">
+  <div class="line-card-hdr">
+    <span class="line-code">S4</span>
+    <span class="line-name">SCTR Collapse</span>
+  </div>
+  <div class="line-desc">SCTR collapsed from positive to negative. Momentum death. Earliest short signal.</div>
+  
+  
+</div>
+<div class="line-card line-red" id="line-s5">
+  <div class="line-card-hdr">
+    <span class="line-code">S5</span>
+    <span class="line-name">Breakdown to Short</span>
+  </div>
+  <div class="line-desc">Campaign breakdown confirmed. Prior bull now in active short deterioration.</div>
+  
+  
+</div>
+</div></div>
+<div class="lines-section"><div class="lines-sec-hdr bear-hdr">Short Lines — Layer C (Stage Structure)</div>
+<div class="lines-grid">
+<div class="line-card line-amber" id="line-sc1">
+  <div class="line-card-hdr">
+    <span class="line-code">S-C1</span>
+    <span class="line-name">Stage 3A Distribution Warn</span>
+  </div>
+  <div class="line-desc">Stage 3A. Distribution warning. Act immediately — protect all long positions.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE = 3A</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="STAGE_duration &lt;= 5 bars">_3a</span><span class="tag tag-warn" title="STAGE_abv50sma = False AND prior day volume high">_volume</span><span class="tag tag-warn" title="breakout = False after extended 2B run">_higher</span><span class="tag tag-warn" title="STAGE_ATRx oscillating (price above and below 50SMA)">whipsawing</span><span class="tag tag-warn" title="large price swings with no net progress">_churning</span><span class="tag tag-warn" title="L_momo_ct dropping OR L_momo_active = False">_fading</span><span class="tag tag-warn" title="L_momo_ct = 0 (momentum fully off)">_zero</span></div>
+</div>
+<div class="line-card line-amber" id="line-sc2">
+  <div class="line-card-hdr">
+    <span class="line-code">S-C2</span>
+    <span class="line-name">Stage 3B Late Distribution</span>
+  </div>
+  <div class="line-desc">Stage 3B. Late distribution. Use rallies to reduce. Not yet a short entry.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE = 3B AND STAGE_bear = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="price has violated 50SMA">False</span><span class="tag tag-warn" title="prior bounce failed at 50SMA or declining MA">_rally</span><span class="tag tag-warn" title="price below 10EMA, 21EMA, 50SMA simultaneously">_mas</span><span class="tag tag-warn" title="volume heavy on down days">_unloading</span><span class="tag tag-warn" title="S_momo_ct &gt;= 1 (short side loading)">_starting</span><span class="tag tag-warn" title="SCTR z_score &lt;= -1.5">_collapsing</span></div>
+</div>
+<div class="line-card line-red" id="line-sc3">
+  <div class="line-card-hdr">
+    <span class="line-code">S-C3</span>
+    <span class="line-name">Stage 4A Breakdown</span>
+  </div>
+  <div class="line-desc">Stage 4A. Fresh breakdown. Maximum short conviction. Most powerful entry.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE = 4A AND STAGE_bear = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="price below 50SMA confirmed">False</span><span class="tag tag-warn" title="STAGE_duration &lt;= 5 bars AND breakdown = True">_breakdown</span><span class="tag tag-warn" title="rel_volume &gt;= 2.0 on breakdown day">_volume</span><span class="tag tag-warn" title="confirmed structural downtrend">_lows</span><span class="tag tag-warn" title="price below 10EMA, 21EMA, 50SMA, 200SMA">_mas</span><span class="tag tag-warn" title="S_momo_ct &gt;= 1 simultaneously">_confirmed</span><span class="tag tag-warn" title="SATY_multid_state = bearish_triggered">_confirmed</span><span class="tag tag-warn" title="50ext_state = Room (not yet extended on downside)">_short</span></div>
+</div>
+<div class="line-card line-red" id="line-sc4">
+  <div class="line-card-hdr">
+    <span class="line-code">S-C4</span>
+    <span class="line-name">Stage 4 Rally Fade</span>
+  </div>
+  <div class="line-desc">Stage 4 rally fade. Failed bounce in declining stock. Short re-entry.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE IN (4A, 4B) AND basing = True AND STAGE_abv50sma = False</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="established decline, not fresh">bars</span><span class="tag tag-warn" title="STAGE_ATRx between -0.5 and 0.0">_50sma</span><span class="tag tag-warn" title="10ext_ATRx near 0 while 50SMA declining">_ma</span><span class="tag tag-warn" title="prior horizontal support now acting as resistance">_support</span><span class="tag tag-warn" title="S_momo_ct &gt;= 2 (bear count running)">_active</span><span class="tag tag-warn" title="SATY_multid_state = bearish_triggered">_triggered</span><span class="tag tag-warn" title="rel_volume &lt; 0.8 on bounce day">_bounce</span></div>
+</div>
+<div class="line-card line-muted" id="line-sc5">
+  <div class="line-card-hdr">
+    <span class="line-code">S-C5</span>
+    <span class="line-name">Stage 4B/4C Deep Decline</span>
+  </div>
+  <div class="line-desc">Stage 4B/4C. Deep decline. Late-stage short. Watch for base forming to cover.</div>
+  <div class="line-criteria"><span class="crit-lbl">Criteria:</span> <code>STAGE IN (4B, 4C) AND STAGE_bear = True</code></div>
+  <div class="line-tags"><span class="tag tag-warn" title="established deep decline \[assumption]">bars</span><span class="tag tag-warn" title="50ext_state = Extended or Exhausted on downside">_short</span><span class="tag tag-warn" title="basing = True in late 4B">_watch</span><span class="tag tag-warn" title="S_momo_9below = True or S_momo_13below = True">_exhaustion</span><span class="tag tag-warn" title="S_momo_9below = True (first short exhaustion)">_zone</span></div>
+</div>
+</div></div>
+<div class="lines-section">
+  <div class="lines-sec-hdr">Multi-Line Conviction — The Sizing Principle</div>
+  <div class="conviction-block">
+    <p class="conv-intro">When a single stock appears on multiple independent production lines simultaneously, each line independently validates the same setup from a different analytical framework. More lines agreeing = higher conviction = larger position justified.</p>
+    <div class="conv-example">
+      <div class="conv-ex-title">Example: XOM on three lines simultaneously</div>
+      <div class="conv-rows">
+        <div class="conv-row"><span class="conv-line-code">B-C2</span><span class="conv-line-name">Stage 2A Early Advance</span><span class="conv-line-why">Structure confirms — fresh breakout from base</span></div>
+        <div class="conv-row"><span class="conv-line-code">B2</span><span class="conv-line-name">Bull Progression (ct=5)</span><span class="conv-line-why">Momentum cycle confirmed — running</span></div>
+        <div class="conv-row"><span class="conv-line-code">B7</span><span class="conv-line-name">SATY 4 Modes Aligned</span><span class="conv-line-why">All timeframes triggered — maximum confirmation</span></div>
+      </div>
+      <div class="conv-conclusion">Three independent systems agree → size up. Lines never communicate with each other. Synthesis happens only in the operator's mind.</div>
+    </div>
+  </div>
+</div><div class="lines-section">
+  <div class="lines-sec-hdr">Setup Shelf Life</div>
+  <table class="shelf-table">
+    <thead><tr><th>Line</th><th>Valid While</th><th>Expires When</th></tr></thead>
+    <tbody>
+      <tr><td class="sc-b">B-C1</td><td>Stage 1B holds</td><td>Not a trade — monitoring until B-C2 fires</td></tr>
+      <tr><td class="sc-g">B-C2</td><td>Days 1–5: max conviction · Through 2A: valid</td><td>Stage transitions to 2B or 3A</td></tr>
+      <tr><td class="sc-b">B-C3</td><td>basing = True near 50SMA support</td><td>Price bounces away or breaks support</td></tr>
+      <tr><td class="sc-g">B-C4</td><td>Stage 2B holds</td><td>Selectivity increases as duration grows</td></tr>
+      <tr><td class="sc-m">B-C5</td><td>200-day support + tight stop only</td><td>200SMA fails</td></tr>
+      <tr><td class="sc-a">S-C1</td><td>Stage 3A active — act immediately</td><td>Price recovers above 50SMA</td></tr>
+      <tr><td class="sc-a">S-C2</td><td>Stage 3B active — reduce longs on rallies</td><td>Stage 4A fires (upgrade urgency)</td></tr>
+      <tr><td class="sc-r">S-C3</td><td>Days 1–5: max conviction · Through 4A: valid</td><td>Stage 4B or base forming</td></tr>
+      <tr><td class="sc-r">S-C4</td><td>basing = True in Stage 4 · Below 50SMA</td><td>Price reclaims 50SMA</td></tr>
+      <tr><td class="sc-m">S-C5</td><td>Stage 4B/4C · Deep decline active</td><td>Stage 1A forming — cover shorts</td></tr>
+    </tbody>
+  </table>
+</div></div><div class="tab-panel" id="panel-regime"><div class="regime-section">
+  <div class="reg-sec-title">Regime → Factory Operating Conditions</div>
+  <table class="regime-table">
+    <thead>
+      <tr>
+        <th>Market Regime</th>
+        <th>Long Factory</th>
+        <th>Short Factory</th>
+        <th>Operator Guidance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="reg-badge bg-g">Bull</span></td>
+        <td class="rf-bull">Full — all lines running</td>
+        <td class="rf-bear">Offline (selective only)</td>
+        <td>Size up on multi-line confirmation. B-C2 breakouts have sector tailwind. Ignitions highly reliable.</td>
+      </tr>
+      <tr>
+        <td><span class="reg-badge bg-b">Strengthening</span></td>
+        <td class="rf-bull">Selective</td>
+        <td class="rf-bear">Sector-only / Watchful</td>
+        <td>Minimum bar: Stage 2A + count + SATY triggered. Shorts only in weakest sectors.</td>
+      </tr>
+      <tr>
+        <td><span class="reg-badge bg-a">Chop</span></td>
+        <td class="rf-bull">Standby</td>
+        <td class="rf-bear">Watchful</td>
+        <td>Few reliable setups. Reduce size. Cash is the correct output. No forcing.</td>
+      </tr>
+      <tr>
+        <td><span class="reg-badge bg-r">Bear</span></td>
+        <td class="rf-bull">Defensive</td>
+        <td class="rf-bear">Active — all short lines</td>
+        <td>S-C3 + S3 Campaign Breakdown = highest conviction. AXTI: investigate bull setups that appear.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="regime-section">
+  <div class="reg-sec-title">The AXTI Principle</div>
+  <div class="axti-block">
+    <div class="axti-quote">Why is there a party at AXTI while everyone else is going to hell?</div>
+    <p>A stock appearing on a bullish production line during a broad market selloff is not noise. It is a signal worth investigating. Price always knows first. The reasons become clear later — by which time most of the move is already done. Every bull-regime-leader tag marks an AXTI event.</p>
+  </div>
+</div>
+
+<div class="regime-section">
+  <div class="reg-sec-title">Cash as Factory Output</div>
+  <div class="cash-doctrine">
+    <p>When the factory's production lines produce no qualified setups, cash is the legitimate output. This is not a failure state. The factory is working correctly — it is telling the operator that today's raw material does not meet production standards.</p>
+    <p>Forcing trades when the factory has nothing to produce is running the production line with substandard raw material. <strong>The output will be defective.</strong></p>
+    <p>If there are no setups, there are no trades. Cash preserves capital for when the lines are running.</p>
+  </div>
+</div>
+
+<div class="regime-section">
+  <div class="reg-sec-title">Production Line Design Principles</div>
+  <div class="princ-grid">
+    <div class="princ-item"><span class="princ-title">One line per stage</span><span class="princ-desc">Each line maps to one stage label or stage transition. No sub-lines. Complexity lives in the tags.</span></div>
+    <div class="princ-item"><span class="princ-title">Tags are operator context</span><span class="princ-desc">Tags enrich the operator's read. They do not change whether a stock qualifies for the line.</span></div>
+    <div class="princ-item"><span class="princ-title">Intelligent defaults</span><span class="princ-desc">Thresholds are based on Weinstein methodology and validated chart examples. Operator-configurable.</span></div>
+    <div class="princ-item"><span class="princ-title">No cross-contamination</span><span class="princ-desc">Lines never communicate with each other. The operator synthesizes. Lines produce independently.</span></div>
+  </div>
+</div></div><div class="tab-panel" id="panel-nlp"><div class="nlp-container"><div class="nlp-section" id="nlp-sec-1">
+<div class="nlp-sec-hdr" style="border-left-color:#0050b3"><span class="nlp-sec-num">§1</span> Market Regime / Tape</div>
+<div class="nlp-subsec-hdr">Senior Trader Phrases → EdgeOS Mapping</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="the party">the party</span><span class="nlp-chip" data-phrase="party mode">party mode</span><span class="nlp-chip" data-phrase="it's a party">it's a party</span><span class="nlp-chip" data-phrase="who is at the party">who is at the party</span><span class="nlp-chip" data-phrase="where is the party">where is the party</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>regime() + scan(L_momo_active=True, sort_by=SCTR desc)<br>Bull_trade_factory IN (Full, Selective)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="hell">hell</span><span class="nlp-chip" data-phrase="who is in hell">who is in hell</span><span class="nlp-chip" data-phrase="it's hell out there">it's hell out there</span><span class="nlp-chip" data-phrase="going to hell">going to hell</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(S_momo_active=True, sort_by=S_momo_ct desc)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="the party is ending">the party is ending</span><span class="nlp-chip" data-phrase="party winding down">party winding down</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_approaching_exhaustion=True)<br>Chop transition</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="regime">regime</span><span class="nlp-chip" data-phrase="what is the tape">what is the tape</span><span class="nlp-chip" data-phrase="what is the market doing">what is the market doing</span><span class="nlp-chip" data-phrase="market conditions">market conditions</span><span class="nlp-chip" data-phrase="what kind of day is it">what kind of day is it</span><span class="nlp-chip" data-phrase="what are we in">what are we in</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>regime() full output</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="bear market">bear market</span><span class="nlp-chip" data-phrase="we're in a bear">we're in a bear</span><span class="nlp-chip" data-phrase="broad market is weak">broad market is weak</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>MKT_regime = Bear</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="bull market">bull market</span><span class="nlp-chip" data-phrase="we're in a bull">we're in a bull</span><span class="nlp-chip" data-phrase="market is ripping">market is ripping</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>MKT_regime = Bull</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="chop">chop</span><span class="nlp-chip" data-phrase="choppy tape">choppy tape</span><span class="nlp-chip" data-phrase="rangebound market">rangebound market</span><span class="nlp-chip" data-phrase="going nowhere">going nowhere</span><span class="nlp-chip" data-phrase="grinding">grinding</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>MKT_regime = Chop<br>Bull_trade_factory = Standby</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="risk on">risk on</span><span class="nlp-chip" data-phrase="offensive mode">offensive mode</span><span class="nlp-chip" data-phrase="full send">full send</span><span class="nlp-chip" data-phrase="full factory">full factory</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Bull_trade_factory = Full</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="risk off">risk off</span><span class="nlp-chip" data-phrase="defensive">defensive</span><span class="nlp-chip" data-phrase="defensive mode">defensive mode</span><span class="nlp-chip" data-phrase="battening down">battening down</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Bull_trade_factory = Defensive</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="rotation">rotation</span><span class="nlp-chip" data-phrase="sector rotation">sector rotation</span><span class="nlp-chip" data-phrase="money moving">money moving</span><span class="nlp-chip" data-phrase="capital rotating">capital rotating</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sectors() ranked by SCTR change<br>compare top vs bottom sector ETF momentum</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="regime flip">regime flip</span><span class="nlp-chip" data-phrase="regime changed">regime changed</span><span class="nlp-chip" data-phrase="tape flipped">tape flipped</span><span class="nlp-chip" data-phrase="market just changed">market just changed</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Regime_changed = True</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="how long have we been in this regime">how long have we been in this regime</span><span class="nlp-chip" data-phrase="how long has this been going on">how long has this been going on</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Regime_duration field</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="universe health">universe health</span><span class="nlp-chip" data-phrase="how healthy is the market">how healthy is the market</span><span class="nlp-chip" data-phrase="overall market score">overall market score</span><span class="nlp-chip" data-phrase="market pulse">market pulse</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>universe_score()</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="broad market">broad market</span><span class="nlp-chip" data-phrase="broad tape">broad tape</span><span class="nlp-chip" data-phrase="broad participation">broad participation</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sectors() full output + universe_score()</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="narrow tape">narrow tape</span><span class="nlp-chip" data-phrase="narrow leadership">narrow leadership</span><span class="nlp-chip" data-phrase="only a few names working">only a few names working</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sectors() showing 1-2 sectors with high SCTR, rest low<br>universe_score bull_pct low despite positive regime</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-2">
+<div class="nlp-sec-hdr" style="border-left-color:#1a6e1a"><span class="nlp-sec-num">§2</span> Production Line Language</div>
+<div class="nlp-subsec-hdr">The Factory (Senior Trader)</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what is the factory producing today">what is the factory producing today</span><span class="nlp-chip" data-phrase="what came off the line today">what came off the line today</span><span class="nlp-chip" data-phrase="what is in the output bin">what is in the output bin</span><span class="nlp-chip" data-phrase="show me today's production">show me today's production</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_fresh_ignition=True) +<br>scan(is_dip_buy_candidate=True) +<br>regime() universe_score</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="is the bull factory running">is the bull factory running</span><span class="nlp-chip" data-phrase="is the long side open">is the long side open</span><span class="nlp-chip" data-phrase="are we producing long ideas">are we producing long ideas</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Bull_trade_factory value + ignitions count</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="is the bear factory running">is the bear factory running</span><span class="nlp-chip" data-phrase="is the short side open">is the short side open</span><span class="nlp-chip" data-phrase="are we producing short ideas">are we producing short ideas</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Bear_trade_factory value + S_momo scan count</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="nothing is coming off the lines">nothing is coming off the lines</span><span class="nlp-chip" data-phrase="no product today">no product today</span><span class="nlp-chip" data-phrase="factory is quiet">factory is quiet</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan returns 0 results across all preset lines<br>cash is the output</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what lines are authorized today">what lines are authorized today</span><span class="nlp-chip" data-phrase="what is running">what is running</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>regime() + Bull/Bear_trade_factory status</code></td></tr>
+</tbody></table>
+<div class="nlp-subsec-hdr">Ignition Line (B1)</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="fresh ignitions">fresh ignitions</span><span class="nlp-chip" data-phrase="fresh count 1">fresh count 1</span><span class="nlp-chip" data-phrase="ignitions today">ignitions today</span><span class="nlp-chip" data-phrase="what just fired">what just fired</span><span class="nlp-chip" data-phrase="new count 1s">new count 1s</span><span class="nlp-chip" data-phrase="fresh launches">fresh launches</span><span class="nlp-chip" data-phrase="new starts">new starts</span><span class="nlp-chip" data-phrase="what stocks just turned on">what stocks just turned on</span><span class="nlp-chip" data-phrase="ignition alert">ignition alert</span><span class="nlp-chip" data-phrase="momentum just fired">momentum just fired</span><span class="nlp-chip" data-phrase="count 1 today">count 1 today</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_fresh_ignition=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="ignition in a bear market">ignition in a bear market</span><span class="nlp-chip" data-phrase="count 1 while market is dumping">count 1 while market is dumping</span><span class="nlp-chip" data-phrase="party starting while everything else is falling">party starting while everything else is falling</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_fresh_ignition=True, MKT_regime=Bear)<br>AXTI principle — flag for investigation</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="ignitions in energy">ignitions in energy</span><span class="nlp-chip" data-phrase="energy ignitions">energy ignitions</span><span class="nlp-chip" data-phrase="show me fresh counts in tech">show me fresh counts in tech</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_fresh_ignition=True, sector=X)</code></td></tr>
+</tbody></table>
+<div class="nlp-subsec-hdr">Progression Line (B2)</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="who is running">who is running</span><span class="nlp-chip" data-phrase="active counts">active counts</span><span class="nlp-chip" data-phrase="who has count">who has count</span><span class="nlp-chip" data-phrase="running counts">running counts</span><span class="nlp-chip" data-phrase="momo names">momo names</span><span class="nlp-chip" data-phrase="momentum names">momentum names</span><span class="nlp-chip" data-phrase="what is in progression">what is in progression</span><span class="nlp-chip" data-phrase="stocks with active count">stocks with active count</span><span class="nlp-chip" data-phrase="who is in the count">who is in the count</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(L_momo_active=True, L_momo_ct &gt;= 2)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="early count names">early count names</span><span class="nlp-chip" data-phrase="count 1 to 4">count 1 to 4</span><span class="nlp-chip" data-phrase="early progression">early progression</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(L_momo_ct_min=1, L_momo_ct_max=4, L_momo_active=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="mid count names">mid count names</span><span class="nlp-chip" data-phrase="count 4 to 7">count 4 to 7</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(L_momo_ct_min=4, L_momo_ct_max=7)</code></td></tr>
+</tbody></table>
+<div class="nlp-subsec-hdr">Exhaustion Lines (B3/B4)</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="approaching exhaustion">approaching exhaustion</span><span class="nlp-chip" data-phrase="count 8">count 8</span><span class="nlp-chip" data-phrase="count 12">count 12</span><span class="nlp-chip" data-phrase="approaching 9">approaching 9</span><span class="nlp-chip" data-phrase="about to hit 9">about to hit 9</span><span class="nlp-chip" data-phrase="nearing exhaustion">nearing exhaustion</span><span class="nlp-chip" data-phrase="getting tired">getting tired</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_approaching_exhaustion=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="exhaustion">exhaustion</span><span class="nlp-chip" data-phrase="at 9">at 9</span><span class="nlp-chip" data-phrase="at 13">at 13</span><span class="nlp-chip" data-phrase="count 9 stocks">count 9 stocks</span><span class="nlp-chip" data-phrase="count 13 stocks">count 13 stocks</span><span class="nlp-chip" data-phrase="first exhaustion">first exhaustion</span><span class="nlp-chip" data-phrase="terminal exhaustion">terminal exhaustion</span><span class="nlp-chip" data-phrase="9 above">9 above</span><span class="nlp-chip" data-phrase="13 above">13 above</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_at_exhaustion=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="9 above stocks">9 above stocks</span><span class="nlp-chip" data-phrase="13 above stocks">13 above stocks</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(L_momo_9above=True) or scan(L_momo_13above=True)</code></td></tr>
+</tbody></table>
+<div class="nlp-subsec-hdr">Dip Buy Lines (B5/B6)</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="9 below">9 below</span><span class="nlp-chip" data-phrase="thirteen below">thirteen below</span><span class="nlp-chip" data-phrase="9-13 below">9-13 below</span><span class="nlp-chip" data-phrase="dip buy">dip buy</span><span class="nlp-chip" data-phrase="dip buys">dip buys</span><span class="nlp-chip" data-phrase="strict 9 below">strict 9 below</span><span class="nlp-chip" data-phrase="strict 13 below">strict 13 below</span><span class="nlp-chip" data-phrase="below window">below window</span><span class="nlp-chip" data-phrase="dip buy window">dip buy window</span><span class="nlp-chip" data-phrase="below the anchor">below the anchor</span><span class="nlp-chip" data-phrase="below the 9 high">below the 9 high</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(below_v2_signal IN [9below, 13below])</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="21 below">21 below</span><span class="nlp-chip" data-phrase="extended dip">extended dip</span><span class="nlp-chip" data-phrase="deep in the window">deep in the window</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(below_v2_signal = 21below)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="strong leader dip">strong leader dip</span><span class="nlp-chip" data-phrase="held the launch zone">held the launch zone</span><span class="nlp-chip" data-phrase="never gave it back">never gave it back</span><span class="nlp-chip" data-phrase="dip buy that held">dip buy that held</span><span class="nlp-chip" data-phrase="leader dip">leader dip</span><span class="nlp-chip" data-phrase="clean dip">clean dip</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_strong_leader_dip_buy=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="deep counter active">deep counter active</span><span class="nlp-chip" data-phrase="broke the launch zone">broke the launch zone</span><span class="nlp-chip" data-phrase="gave back the gains">gave back the gains</span><span class="nlp-chip" data-phrase="deep dip">deep dip</span><span class="nlp-chip" data-phrase="below the trigger low">below the trigger low</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(below_v3_signal active)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="dip in energy">dip in energy</span><span class="nlp-chip" data-phrase="9 below in semis">9 below in semis</span><span class="nlp-chip" data-phrase="show me dips in financials">show me dips in financials</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_dip_buy_candidate=True, sector=X)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="raising its hand">raising its hand</span><span class="nlp-chip" data-phrase="showing up at the level">showing up at the level</span><span class="nlp-chip" data-phrase="doing what it's supposed to">doing what it's supposed to</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>is_dip_buy_candidate=True AND SATY_intra_state=bullish_triggered<br>or L_momo_ct=1 same day as 9below milestone</code><div class="nlp-note">Note to Claude: price confirmation required — check SATY state</div></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="9 below coming up">9 below coming up</span><span class="nlp-chip" data-phrase="approaching 9 below">approaching 9 below</span><span class="nlp-chip" data-phrase="monitoring zone">monitoring zone</span><span class="nlp-chip" data-phrase="almost at 9">almost at 9</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>9_13below_ct_v2 between 7 and 8<br>monitoring only, not actionable yet</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="all three counters">all three counters</span><span class="nlp-chip" data-phrase="v1 v2 v3 all active">v1 v2 v3 all active</span><span class="nlp-chip" data-phrase="all three at milestone">all three at milestone</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(9_13below_v1v2v3=True)</code></td></tr>
+</tbody></table>
+<div class="nlp-subsec-hdr">SATY Lines (B7)</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="SATY triggered">SATY triggered</span><span class="nlp-chip" data-phrase="above the trigger">above the trigger</span><span class="nlp-chip" data-phrase="bullish trigger">bullish trigger</span><span class="nlp-chip" data-phrase="triggered bullish">triggered bullish</span><span class="nlp-chip" data-phrase="intraday trigger">intraday trigger</span><span class="nlp-chip" data-phrase="daily trigger">daily trigger</span><span class="nlp-chip" data-phrase="weekly trigger">weekly trigger</span><span class="nlp-chip" data-phrase="monthly trigger">monthly trigger</span><span class="nlp-chip" data-phrase="quarterly trigger">quarterly trigger</span><span class="nlp-chip" data-phrase="all 4 modes triggered">all 4 modes triggered</span><span class="nlp-chip" data-phrase="fully triggered">fully triggered</span><span class="nlp-chip" data-phrase="all modes bullish">all modes bullish</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(SATY_mtf_bull=4)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="3 modes triggered">3 modes triggered</span><span class="nlp-chip" data-phrase="mostly triggered">mostly triggered</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(SATY_mtf_bull_min=3)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="SATY bearish">SATY bearish</span><span class="nlp-chip" data-phrase="below the trigger">below the trigger</span><span class="nlp-chip" data-phrase="bearish trigger">bearish trigger</span><span class="nlp-chip" data-phrase="triggered bearish">triggered bearish</span><span class="nlp-chip" data-phrase="bear side triggered">bear side triggered</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(SATY_mtf_bear_min &gt;= 2)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="tight to trigger">tight to trigger</span><span class="nlp-chip" data-phrase="near the trigger">near the trigger</span><span class="nlp-chip" data-phrase="close to the line">close to the line</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>SATY_multid_trg_dist_bull between -1% and +1%</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="how much room to target">how much room to target</span><span class="nlp-chip" data-phrase="room to the target">room to the target</span><span class="nlp-chip" data-phrase="distance to target">distance to target</span><span class="nlp-chip" data-phrase="how far to the SATY target">how far to the SATY target</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>SATY_multid_tgt_dist_bull field</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show me XOM SATY levels">show me XOM SATY levels</span><span class="nlp-chip" data-phrase="SATY for NVDA">SATY for NVDA</span><span class="nlp-chip" data-phrase="what are the triggers for SPY">what are the triggers for SPY</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>saty(ticker=X)</code></td></tr>
+</tbody></table>
+<div class="nlp-subsec-hdr">SCTR Velocity Lines (B8/B9)</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="SCTR accelerating">SCTR accelerating</span><span class="nlp-chip" data-phrase="momentum accelerating">momentum accelerating</span><span class="nlp-chip" data-phrase="SCTR velocity">SCTR velocity</span><span class="nlp-chip" data-phrase="fast movers">fast movers</span><span class="nlp-chip" data-phrase="SCTR moving fast">SCTR moving fast</span><span class="nlp-chip" data-phrase="velocity scan">velocity scan</span><span class="nlp-chip" data-phrase="what is moving fast">what is moving fast</span><span class="nlp-chip" data-phrase="big SCTR move">big SCTR move</span><span class="nlp-chip" data-phrase="SCTR surge">SCTR surge</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sctr_velocity(direction=long)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="resurrection">resurrection</span><span class="nlp-chip" data-phrase="SCTR crossed zero">SCTR crossed zero</span><span class="nlp-chip" data-phrase="crossed from negative to positive">crossed from negative to positive</span><span class="nlp-chip" data-phrase="coming back from the dead">coming back from the dead</span><span class="nlp-chip" data-phrase="turning from negative">turning from negative</span><span class="nlp-chip" data-phrase="SCTR recovery">SCTR recovery</span><span class="nlp-chip" data-phrase="back from hell">back from hell</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sctr_velocity(resurrection=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="SCTR collapsing">SCTR collapsing</span><span class="nlp-chip" data-phrase="SCTR crashing">SCTR crashing</span><span class="nlp-chip" data-phrase="momentum collapsing">momentum collapsing</span><span class="nlp-chip" data-phrase="SCTR going negative">SCTR going negative</span><span class="nlp-chip" data-phrase="fell off a cliff">fell off a cliff</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sctr_velocity(direction=short)</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-3">
+<div class="nlp-sec-hdr" style="border-left-color:#0050b3"><span class="nlp-sec-num">§3</span> Stage Structure</div>
+<div class="nlp-subsec-hdr">Stage Identification</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what stage is XOM in">what stage is XOM in</span><span class="nlp-chip" data-phrase="show me XOM stage">show me XOM stage</span><span class="nlp-chip" data-phrase="stage of NVDA">stage of NVDA</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X) STAGE field</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="stage 2 stocks">stage 2 stocks</span><span class="nlp-chip" data-phrase="advancing stocks">advancing stocks</span><span class="nlp-chip" data-phrase="stage 2A names">stage 2A names</span><span class="nlp-chip" data-phrase="early stage 2">early stage 2</span><span class="nlp-chip" data-phrase="fresh breakouts">fresh breakouts</span><span class="nlp-chip" data-phrase="fresh 2A">fresh 2A</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=2A, STAGE_duration_max=10)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="stage 2 breakout">stage 2 breakout</span><span class="nlp-chip" data-phrase="breaking out">breaking out</span><span class="nlp-chip" data-phrase="breaking out of base">breaking out of base</span><span class="nlp-chip" data-phrase="1B to 2A">1B to 2A</span><span class="nlp-chip" data-phrase="base breakout">base breakout</span><span class="nlp-chip" data-phrase="breakout through resistance">breakout through resistance</span><span class="nlp-chip" data-phrase="breaking through horizontal resistance">breaking through horizontal resistance</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=2A, breakout=True, STAGE_duration_max=5)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="tiger in the tank">tiger in the tank</span><span class="nlp-chip" data-phrase="gap up on volume breakout">gap up on volume breakout</span><span class="nlp-chip" data-phrase="gapping through resistance">gapping through resistance</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=2A, breakout=True) + rel_volume &gt;= 2.0<br>Note to Claude: this is a conviction signal, not a separate scan</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="stage 2B names">stage 2B names</span><span class="nlp-chip" data-phrase="established uptrends">established uptrends</span><span class="nlp-chip" data-phrase="running uptrends">running uptrends</span><span class="nlp-chip" data-phrase="mature uptrend">mature uptrend</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=2B, STAGE_bull=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="continuation breakout">continuation breakout</span><span class="nlp-chip" data-phrase="breaking out within stage 2">breaking out within stage 2</span><span class="nlp-chip" data-phrase="new highs within uptrend">new highs within uptrend</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE IN [2A,2B], breakout=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="basing">basing</span><span class="nlp-chip" data-phrase="building a base">building a base</span><span class="nlp-chip" data-phrase="stage 1B">stage 1B</span><span class="nlp-chip" data-phrase="late in the base">late in the base</span><span class="nlp-chip" data-phrase="coiling">coiling</span><span class="nlp-chip" data-phrase="watch for breakout">watch for breakout</span><span class="nlp-chip" data-phrase="loaded base">loaded base</span><span class="nlp-chip" data-phrase="long base">long base</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=1B, basing=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="pullback to 50">pullback to 50</span><span class="nlp-chip" data-phrase="pulling back to the 50">pulling back to the 50</span><span class="nlp-chip" data-phrase="testing the 50">testing the 50</span><span class="nlp-chip" data-phrase="support at 50">support at 50</span><span class="nlp-chip" data-phrase="bouncing off the 50">bouncing off the 50</span><span class="nlp-chip" data-phrase="institutional buying at the 50">institutional buying at the 50</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=2A, basing=True, STAGE_abv50sma=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="above the 50">above the 50</span><span class="nlp-chip" data-phrase="living above the 50">living above the 50</span><span class="nlp-chip" data-phrase="above 50SMA">above 50SMA</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE_abv50sma=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="below the 50">below the 50</span><span class="nlp-chip" data-phrase="lost the 50">lost the 50</span><span class="nlp-chip" data-phrase="under the 50">under the 50</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE_abv50sma=False)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="topping">topping</span><span class="nlp-chip" data-phrase="stage 3">stage 3</span><span class="nlp-chip" data-phrase="distribution">distribution</span><span class="nlp-chip" data-phrase="churning at the top">churning at the top</span><span class="nlp-chip" data-phrase="3A warning">3A warning</span><span class="nlp-chip" data-phrase="topping signs">topping signs</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE IN [3A, 3B])</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="stage 3A">stage 3A</span><span class="nlp-chip" data-phrase="early distribution">early distribution</span><span class="nlp-chip" data-phrase="first signs of top">first signs of top</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=3A)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="stage 3B">stage 3B</span><span class="nlp-chip" data-phrase="late distribution">late distribution</span><span class="nlp-chip" data-phrase="use rallies to sell">use rallies to sell</span><span class="nlp-chip" data-phrase="distribution confirmed">distribution confirmed</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=3B, STAGE_bear=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="stage 4">stage 4</span><span class="nlp-chip" data-phrase="declining">declining</span><span class="nlp-chip" data-phrase="downtrend">downtrend</span><span class="nlp-chip" data-phrase="stage 4A">stage 4A</span><span class="nlp-chip" data-phrase="stage 4 breakdown">stage 4 breakdown</span><span class="nlp-chip" data-phrase="fresh breakdown">fresh breakdown</span><span class="nlp-chip" data-phrase="just broke down">just broke down</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE=4A, STAGE_duration_max=5)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="failed rally">failed rally</span><span class="nlp-chip" data-phrase="rally to fade">rally to fade</span><span class="nlp-chip" data-phrase="bounce to short">bounce to short</span><span class="nlp-chip" data-phrase="dead cat bounce">dead cat bounce</span><span class="nlp-chip" data-phrase="shorting the bounce">shorting the bounce</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(STAGE IN [4A,4B], basing=True, STAGE_abv50sma=False)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="extended above">extended above</span><span class="nlp-chip" data-phrase="too extended">too extended</span><span class="nlp-chip" data-phrase="overextended">overextended</span><span class="nlp-chip" data-phrase="stretched above the 50">stretched above the 50</span><span class="nlp-chip" data-phrase="too far from the MA">too far from the MA</span><span class="nlp-chip" data-phrase="take some off">take some off</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>50ext_state IN [Extended, Exhausted]<br>STAGE_ATRx &gt; [operator threshold]</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="well above the 50">well above the 50</span><span class="nlp-chip" data-phrase="extended move">extended move</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>50ext_ATRx high + 50ext_state = Extended</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-4">
+<div class="nlp-sec-hdr" style="border-left-color:#8a6000"><span class="nlp-sec-num">§4</span> Campaign &amp; Targets</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="active campaigns">active campaigns</span><span class="nlp-chip" data-phrase="open campaigns">open campaigns</span><span class="nlp-chip" data-phrase="who has a campaign running">who has a campaign running</span><span class="nlp-chip" data-phrase="what campaigns are open">what campaigns are open</span><span class="nlp-chip" data-phrase="show me the campaigns">show me the campaigns</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>campaigns()</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="gain from trigger">gain from trigger</span><span class="nlp-chip" data-phrase="how much from trigger">how much from trigger</span><span class="nlp-chip" data-phrase="how much gain since launch">how much gain since launch</span><span class="nlp-chip" data-phrase="return since count 1">return since count 1</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>L_momo_gain_pct field</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="TC1 target">TC1 target</span><span class="nlp-chip" data-phrase="TC2 target">TC2 target</span><span class="nlp-chip" data-phrase="TC3 target">TC3 target</span><span class="nlp-chip" data-phrase="first target">first target</span><span class="nlp-chip" data-phrase="second target">second target</span><span class="nlp-chip" data-phrase="price targets">price targets</span><span class="nlp-chip" data-phrase="where are the targets">where are the targets</span><span class="nlp-chip" data-phrase="what are the TC levels">what are the TC levels</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X) L_momo_tc1/tc2/tc3</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="how far to TC1">how far to TC1</span><span class="nlp-chip" data-phrase="distance to first target">distance to first target</span><span class="nlp-chip" data-phrase="room to target">room to target</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>L_momo_tc1 vs current price calculation</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="prior cycles">prior cycles</span><span class="nlp-chip" data-phrase="expansion history">expansion history</span><span class="nlp-chip" data-phrase="what did it do before">what did it do before</span><span class="nlp-chip" data-phrase="how did prior cycles expand">how did prior cycles expand</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>L_momo_ic1/ic2/ic3 + prior1/2/3 fields</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="campaign breakdown">campaign breakdown</span><span class="nlp-chip" data-phrase="breaking down from campaign">breaking down from campaign</span><span class="nlp-chip" data-phrase="bull campaign collapsing">bull campaign collapsing</span><span class="nlp-chip" data-phrase="campaign to short">campaign to short</span><span class="nlp-chip" data-phrase="transition to short">transition to short</span><span class="nlp-chip" data-phrase="prior bull now breaking">prior bull now breaking</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_campaign_breakdown=True)<br>OR scan(9_13below_s_momo=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="short campaign active">short campaign active</span><span class="nlp-chip" data-phrase="short campaign open">short campaign open</span><span class="nlp-chip" data-phrase="bear campaign">bear campaign</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(short_campaign_active=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="how old is the campaign">how old is the campaign</span><span class="nlp-chip" data-phrase="campaign age">campaign age</span><span class="nlp-chip" data-phrase="how long since count 1">how long since count 1</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>campaign_age field</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-5">
+<div class="nlp-sec-hdr" style="border-left-color:#0050b3"><span class="nlp-sec-num">§5</span> Sector &amp; Group</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="where is the party">where is the party</span><span class="nlp-chip" data-phrase="which sectors are running">which sectors are running</span><span class="nlp-chip" data-phrase="sector leaders">sector leaders</span><span class="nlp-chip" data-phrase="best sectors">best sectors</span><span class="nlp-chip" data-phrase="sector rotation">sector rotation</span><span class="nlp-chip" data-phrase="where is the strength">where is the strength</span><span class="nlp-chip" data-phrase="where is the money going">where is the money going</span><span class="nlp-chip" data-phrase="what sectors are hot">what sectors are hot</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sectors() ranked by SCTR desc</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="where is hell">where is hell</span><span class="nlp-chip" data-phrase="worst sectors">worst sectors</span><span class="nlp-chip" data-phrase="sector laggards">sector laggards</span><span class="nlp-chip" data-phrase="weakest sectors">weakest sectors</span><span class="nlp-chip" data-phrase="sector breakdown">sector breakdown</span><span class="nlp-chip" data-phrase="where is the weakness">where is the weakness</span><span class="nlp-chip" data-phrase="what sectors are cold">what sectors are cold</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sectors() ranked by SCTR asc</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="next party">next party</span><span class="nlp-chip" data-phrase="emerging sectors">emerging sectors</span><span class="nlp-chip" data-phrase="what sector is building">what sector is building</span><span class="nlp-chip" data-phrase="SCTR velocity in sectors">SCTR velocity in sectors</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sctr_velocity(direction=long) filtered by ETFs</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="energy party">energy party</span><span class="nlp-chip" data-phrase="tech in hell">tech in hell</span><span class="nlp-chip" data-phrase="financials running">financials running</span><span class="nlp-chip" data-phrase="show me sector X">show me sector X</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=XLE) or relevant ETF</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="sector confirmation">sector confirmation</span><span class="nlp-chip" data-phrase="sector is confirming">sector is confirming</span><span class="nlp-chip" data-phrase="group strength confirmed">group strength confirmed</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>sector ETF SCTR &gt; 9 + Stage 2A + L_momo_active</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="sector non-confirmation">sector non-confirmation</span><span class="nlp-chip" data-phrase="stock running but sector weak">stock running but sector weak</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>stock L_momo_active=True but sector ETF SCTR &lt; 5</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="defensive rotation">defensive rotation</span><span class="nlp-chip" data-phrase="money going defensive">money going defensive</span><span class="nlp-chip" data-phrase="defensives leading">defensives leading</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>XLV, XLP, XLU showing highest SCTR in sectors()</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="offensive rotation">offensive rotation</span><span class="nlp-chip" data-phrase="cyclicals leading">cyclicals leading</span><span class="nlp-chip" data-phrase="tech leading">tech leading</span><span class="nlp-chip" data-phrase="growth leading">growth leading</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>XLK, SMH, XLY showing highest SCTR in sectors()</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-6">
+<div class="nlp-sec-hdr" style="border-left-color:#8a6000"><span class="nlp-sec-num">§6</span> Deterioration / Dip Buy</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="deterioration">deterioration</span><span class="nlp-chip" data-phrase="deteriorating">deteriorating</span><span class="nlp-chip" data-phrase="campaign deteriorating">campaign deteriorating</span><span class="nlp-chip" data-phrase="stock deteriorating">stock deteriorating</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(9_13below_signal_v1 active OR v2 active)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="light counter">light counter</span><span class="nlp-chip" data-phrase="strict counter">strict counter</span><span class="nlp-chip" data-phrase="deep counter">deep counter</span><span class="nlp-chip" data-phrase="v1 counter">v1 counter</span><span class="nlp-chip" data-phrase="v2 counter">v2 counter</span><span class="nlp-chip" data-phrase="v3 counter">v3 counter</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>specific counter fields in show() or dips()</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="light and strict both active">light and strict both active</span><span class="nlp-chip" data-phrase="v1v2 active">v1v2 active</span><span class="nlp-chip" data-phrase="two counters at milestone">two counters at milestone</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(9_13below_v1v2=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="all three active">all three active</span><span class="nlp-chip" data-phrase="v1v2v3">v1v2v3</span><span class="nlp-chip" data-phrase="full deterioration">full deterioration</span><span class="nlp-chip" data-phrase="maximum deterioration">maximum deterioration</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(9_13below_v1v2v3=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="anchor high">anchor high</span><span class="nlp-chip" data-phrase="cycle 9 high">cycle 9 high</span><span class="nlp-chip" data-phrase="high of the 9">high of the 9</span><span class="nlp-chip" data-phrase="the peak">the peak</span><span class="nlp-chip" data-phrase="prior cycle peak">prior cycle peak</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>9_13below_anchor9_high field</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="trig 1 low">trig 1 low</span><span class="nlp-chip" data-phrase="launch zone">launch zone</span><span class="nlp-chip" data-phrase="launch low">launch low</span><span class="nlp-chip" data-phrase="count 1 low">count 1 low</span><span class="nlp-chip" data-phrase="where the count started">where the count started</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>9_13below_trig1_low field</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="below the launch zone">below the launch zone</span><span class="nlp-chip" data-phrase="gave back everything">gave back everything</span><span class="nlp-chip" data-phrase="deep counter firing">deep counter firing</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>9_13below_ct_v3 &gt; 0<br>9_13below_signal_v3 active</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-7">
+<div class="nlp-sec-hdr" style="border-left-color:#1a6e1a"><span class="nlp-sec-num">§7</span> Relative Strength</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="relative strength">relative strength</span><span class="nlp-chip" data-phrase="RS">RS</span><span class="nlp-chip" data-phrase="outperforming">outperforming</span><span class="nlp-chip" data-phrase="outperforming SPY">outperforming SPY</span><span class="nlp-chip" data-phrase="better than the market">better than the market</span><span class="nlp-chip" data-phrase="alpha generator">alpha generator</span><span class="nlp-chip" data-phrase="running harder than SPY">running harder than SPY</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(rsva_outperforming=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="improving RS">improving RS</span><span class="nlp-chip" data-phrase="RS improving">RS improving</span><span class="nlp-chip" data-phrase="relative strength building">relative strength building</span><span class="nlp-chip" data-phrase="starting to outperform">starting to outperform</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(rsva_improving=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="RS weakening">RS weakening</span><span class="nlp-chip" data-phrase="underperforming">underperforming</span><span class="nlp-chip" data-phrase="lagging the market">lagging the market</span><span class="nlp-chip" data-phrase="worse than SPY">worse than SPY</span><span class="nlp-chip" data-phrase="losing relative strength">losing relative strength</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(rsva_state=underperforming OR weakening)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="strongest relative strength">strongest relative strength</span><span class="nlp-chip" data-phrase="best RS names">best RS names</span><span class="nlp-chip" data-phrase="top RS">top RS</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(rsva_outperforming=True, sort_by=rsva_raw desc)</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-8">
+<div class="nlp-sec-hdr" style="border-left-color:#8a6000"><span class="nlp-sec-num">§8</span> Extension / MAXEX</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="extension">extension</span><span class="nlp-chip" data-phrase="how extended">how extended</span><span class="nlp-chip" data-phrase="how far from the 50">how far from the 50</span><span class="nlp-chip" data-phrase="extension score">extension score</span><span class="nlp-chip" data-phrase="fresh setup score">fresh setup score</span><span class="nlp-chip" data-phrase="room to run">room to run</span><span class="nlp-chip" data-phrase="has room">has room</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>EXT_score field + 50ext_state</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="room on 50">room on 50</span><span class="nlp-chip" data-phrase="room on 200">room on 200</span><span class="nlp-chip" data-phrase="not extended">not extended</span><span class="nlp-chip" data-phrase="still has room">still has room</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>50ext_state = Room<br>200ext_state = Room</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="approaching extension">approaching extension</span><span class="nlp-chip" data-phrase="getting extended">getting extended</span><span class="nlp-chip" data-phrase="watch the extension">watch the extension</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>50ext_state = Approaching</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="extended on 50">extended on 50</span><span class="nlp-chip" data-phrase="extended from 50">extended from 50</span><span class="nlp-chip" data-phrase="too extended on the 50">too extended on the 50</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>50ext_state = Extended</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="exhausted on the 200">exhausted on the 200</span><span class="nlp-chip" data-phrase="200 exhaustion">200 exhaustion</span><span class="nlp-chip" data-phrase="way above the 200">way above the 200</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>200ext_state = Exhausted</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="any exhaustion">any exhaustion</span><span class="nlp-chip" data-phrase="any MA exhausted">any MA exhausted</span><span class="nlp-chip" data-phrase="exhausted">exhausted</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>EXT_any_exh = True</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="double exhaustion">double exhaustion</span><span class="nlp-chip" data-phrase="exhausted on multiple MAs">exhausted on multiple MAs</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>EXT_double_exh = True</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="fresh setup">fresh setup</span><span class="nlp-chip" data-phrase="high setup score">high setup score</span><span class="nlp-chip" data-phrase="clean extension setup">clean extension setup</span><span class="nlp-chip" data-phrase="best extension setup">best extension setup</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(EXT_score_min=70, sort_by=EXT_score desc)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="where is price vs 10">where is price vs 10</span><span class="nlp-chip" data-phrase="above the 10">above the 10</span><span class="nlp-chip" data-phrase="10 EMA distance">10 EMA distance</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>10ext_ATRx field</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-9">
+<div class="nlp-sec-hdr" style="border-left-color:#0050b3"><span class="nlp-sec-num">§9</span> Individual Ticker</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show me XOM">show me XOM</span><span class="nlp-chip" data-phrase="what is XOM doing">what is XOM doing</span><span class="nlp-chip" data-phrase="XOM snapshot">XOM snapshot</span><span class="nlp-chip" data-phrase="give me the full read on XOM">give me the full read on XOM</span><span class="nlp-chip" data-phrase="full picture on NVDA">full picture on NVDA</span><span class="nlp-chip" data-phrase="everything on SPY">everything on SPY</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="why is XOM in the scan">why is XOM in the scan</span><span class="nlp-chip" data-phrase="why did XOM appear">why did XOM appear</span><span class="nlp-chip" data-phrase="explain this setup">explain this setup</span><span class="nlp-chip" data-phrase="why is this actionable">why is this actionable</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X) + Claude explains which production lines qualify it</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="is XOM a buy">is XOM a buy</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Note to Claude: never say yes or no<br>show(ticker=X) and explain what the signals show<br>&quot;EdgeOS shows X signals — the trader decides&quot;</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what is XOM's count">what is XOM's count</span><span class="nlp-chip" data-phrase="XOM count">XOM count</span><span class="nlp-chip" data-phrase="what count is XOM on">what count is XOM on</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X) L_momo_ct</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what stage is XOM in">what stage is XOM in</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X) STAGE</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="XOM targets">XOM targets</span><span class="nlp-chip" data-phrase="XOM TC levels">XOM TC levels</span><span class="nlp-chip" data-phrase="where does XOM go">where does XOM go</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X) L_momo_tc1/tc2/tc3</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="XOM SATY">XOM SATY</span><span class="nlp-chip" data-phrase="XOM triggers">XOM triggers</span><span class="nlp-chip" data-phrase="XOM ATR levels">XOM ATR levels</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>saty(ticker=XOM)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show me yesterday's XOM">show me yesterday's XOM</span><span class="nlp-chip" data-phrase="what was XOM on March 21">what was XOM on March 21</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X, date=specific_date)</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-10">
+<div class="nlp-sec-hdr" style="border-left-color:#0050b3"><span class="nlp-sec-num">§10</span> Scan &amp; Filter</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show me everything">show me everything</span><span class="nlp-chip" data-phrase="full scan">full scan</span><span class="nlp-chip" data-phrase="show me all stocks">show me all stocks</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan() with no filters, limit=50</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show me the leaders">show me the leaders</span><span class="nlp-chip" data-phrase="bull leaders">bull leaders</span><span class="nlp-chip" data-phrase="top names">top names</span><span class="nlp-chip" data-phrase="best SCTR names">best SCTR names</span><span class="nlp-chip" data-phrase="who is leading">who is leading</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(L_momo_active=True, SCTR_min=9, STAGE_bull=True,<br>sort_by=SCTR desc)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="bear leaders">bear leaders</span><span class="nlp-chip" data-phrase="short leaders">short leaders</span><span class="nlp-chip" data-phrase="who is leading to the downside">who is leading to the downside</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(S_momo_active=True, STAGE_bear=True,<br>sort_by=S_momo_ct desc)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="emerging leaders">emerging leaders</span><span class="nlp-chip" data-phrase="new leaders">new leaders</span><span class="nlp-chip" data-phrase="fresh ignitions with high SCTR">fresh ignitions with high SCTR</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_fresh_ignition=True, SCTR_min=8)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="broken leaders">broken leaders</span><span class="nlp-chip" data-phrase="former leaders now failing">former leaders now failing</span><span class="nlp-chip" data-phrase="leaders rolling over">leaders rolling over</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_campaign_breakdown=True) OR<br>scan(STAGE=3A, L_momo_ct=0, prior campaign_active was True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="stealth leaders">stealth leaders</span><span class="nlp-chip" data-phrase="hidden strength">hidden strength</span><span class="nlp-chip" data-phrase="running quietly">running quietly</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(L_momo_active=True, MKT_regime=Bear, sort_by=SCTR desc)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show me large caps">show me large caps</span><span class="nlp-chip" data-phrase="mega cap scan">mega cap scan</span><span class="nlp-chip" data-phrase="only big names">only big names</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(market_cap_tiers=[mega, large])</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="small caps">small caps</span><span class="nlp-chip" data-phrase="mid caps">mid caps</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(market_cap_tiers=[small]) or [mid]</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="optionable names">optionable names</span><span class="nlp-chip" data-phrase="names with options">names with options</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(has_options=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="high volume today">high volume today</span><span class="nlp-chip" data-phrase="unusual volume">unusual volume</span><span class="nlp-chip" data-phrase="high relative volume">high relative volume</span><span class="nlp-chip" data-phrase="RVOL high">RVOL high</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(rel_volume_min=2.0)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="S&amp;P 500 names">S&amp;P 500 names</span><span class="nlp-chip" data-phrase="index members">index members</span><span class="nlp-chip" data-phrase="SPX names">SPX names</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(in_sp500=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show me tech ignitions">show me tech ignitions</span><span class="nlp-chip" data-phrase="energy dip buys">energy dip buys</span><span class="nlp-chip" data-phrase="financials in stage 2A">financials in stage 2A</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(sector=X) + relevant filter</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show me semis">show me semis</span><span class="nlp-chip" data-phrase="semiconductors scan">semiconductors scan</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(industry_group=Semiconductors)</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-11">
+<div class="nlp-sec-hdr" style="border-left-color:#1a6e1a"><span class="nlp-sec-num">§11</span> Morning Routine</div>
+<div class="nlp-subsec-hdr">Senior Trader Pre-Market</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="good morning">good morning</span><span class="nlp-chip" data-phrase="morning briefing">morning briefing</span><span class="nlp-chip" data-phrase="morning setup">morning setup</span><span class="nlp-chip" data-phrase="pre-market briefing">pre-market briefing</span><span class="nlp-chip" data-phrase="what do I need to know">what do I need to know</span><span class="nlp-chip" data-phrase="start of day">start of day</span><span class="nlp-chip" data-phrase="morning read">morning read</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>regime() +<br>universe_score() +<br>sectors() top 3 and bottom 3 +<br>scan(is_fresh_ignition=True, limit=5) +<br>scan(9_13below_signal_v2 transitions today, limit=5) +<br>scan(Regime_changed=True)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what changed overnight">what changed overnight</span><span class="nlp-chip" data-phrase="overnight changes">overnight changes</span><span class="nlp-chip" data-phrase="regime change">regime change</span><span class="nlp-chip" data-phrase="what happened">what happened</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Regime_changed=True check +<br>signal_history transitions since yesterday</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what fired last night">what fired last night</span><span class="nlp-chip" data-phrase="what transitioned">what transitioned</span><span class="nlp-chip" data-phrase="overnight alerts">overnight alerts</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>recent alert_log entries</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="watchlist update">watchlist update</span><span class="nlp-chip" data-phrase="how is my watchlist">how is my watchlist</span><span class="nlp-chip" data-phrase="watchlist this morning">watchlist this morning</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>watchlist snapshot</code></td></tr>
+</tbody></table>
+<div class="nlp-subsec-hdr">Junior Trader / Turtle Language</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what should I look at today">what should I look at today</span><span class="nlp-chip" data-phrase="where do I start">where do I start</span><span class="nlp-chip" data-phrase="I don't know what to do">I don't know what to do</span><span class="nlp-chip" data-phrase="explain today's market">explain today's market</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>regime() + universe_score() + Claude explains in simple terms<br>Claude teaches: &quot;In a Bear regime with Defensive factory mode,<br>the system is focused on...&quot;</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what does Bear regime mean">what does Bear regime mean</span><span class="nlp-chip" data-phrase="explain the regime">explain the regime</span><span class="nlp-chip" data-phrase="what is defensive mode">what is defensive mode</span><span class="nlp-chip" data-phrase="what does Bull trade factory full mean">what does Bull trade factory full mean</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Claude explains using EdgeOS Design Doctrine teaching role</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what is a count 1">what is a count 1</span><span class="nlp-chip" data-phrase="explain ignition">explain ignition</span><span class="nlp-chip" data-phrase="what does 9 below mean">what does 9 below mean</span><span class="nlp-chip" data-phrase="explain dip buy">explain dip buy</span><span class="nlp-chip" data-phrase="what is campaign breakdown">what is campaign breakdown</span><span class="nlp-chip" data-phrase="what is stage 2A">what is stage 2A</span><span class="nlp-chip" data-phrase="explain SATY">explain SATY</span><span class="nlp-chip" data-phrase="what does exhaustion mean">what does exhaustion mean</span><span class="nlp-chip" data-phrase="what is SCTR">what is SCTR</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Claude tutors using EdgeOS field definitions<br>Always references the deterministic signal, never invents</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="why is NVDA flagged as dip buy">why is NVDA flagged as dip buy</span><span class="nlp-chip" data-phrase="why does XOM have a count">why does XOM have a count</span><span class="nlp-chip" data-phrase="explain this result">explain this result</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X) + Claude explains each signal in plain language</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what is the best setup right now">what is the best setup right now</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>scan(is_fresh_ignition=True, STAGE_bull=True, sort_by=EXT_score desc)<br>Note to Claude: present results, explain what makes them setups<br>Never say &quot;buy this&quot; — explain what the signals show</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="how do I use this">how do I use this</span><span class="nlp-chip" data-phrase="teach me the system">teach me the system</span><span class="nlp-chip" data-phrase="I'm new to this">I'm new to this</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Claude enters teaching mode<br>Explains Trade Factory concept<br>Explains production lines<br>Explains how to read output<br>Always anchors to deterministic data</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-12">
+<div class="nlp-sec-hdr" style="border-left-color:#555555"><span class="nlp-sec-num">§12</span> Watchlist</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="add XOM to watchlist">add XOM to watchlist</span><span class="nlp-chip" data-phrase="watch XOM">watch XOM</span><span class="nlp-chip" data-phrase="track XOM">track XOM</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>watch add XOM</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="remove XOM">remove XOM</span><span class="nlp-chip" data-phrase="stop watching XOM">stop watching XOM</span><span class="nlp-chip" data-phrase="take XOM off">take XOM off</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>watch remove XOM</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="show my watchlist">show my watchlist</span><span class="nlp-chip" data-phrase="my stocks">my stocks</span><span class="nlp-chip" data-phrase="what am I watching">what am I watching</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>watch snapshot</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="watchlist update">watchlist update</span><span class="nlp-chip" data-phrase="how are my stocks">how are my stocks</span><span class="nlp-chip" data-phrase="watchlist signals">watchlist signals</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>watch snapshot with full signal output</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="add XOM with note">add XOM with note</span><span class="nlp-chip" data-phrase="XOM — watching for 9 below">XOM — watching for 9 below</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>watch add XOM &quot;watching for 9 below&quot;</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-13">
+<div class="nlp-sec-hdr" style="border-left-color:#8a6000"><span class="nlp-sec-num">§13</span> Export &amp; Reports</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="export today">export today</span><span class="nlp-chip" data-phrase="EOD export">EOD export</span><span class="nlp-chip" data-phrase="end of day export">end of day export</span><span class="nlp-chip" data-phrase="today's report">today's report</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>export --eod</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="weekly export">weekly export</span><span class="nlp-chip" data-phrase="weekly review">weekly review</span><span class="nlp-chip" data-phrase="Friday export">Friday export</span><span class="nlp-chip" data-phrase="week in review">week in review</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>export --weekly</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="what fired this week">what fired this week</span><span class="nlp-chip" data-phrase="week's ignitions">week's ignitions</span><span class="nlp-chip" data-phrase="weekly ignitions">weekly ignitions</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>export --weekly Sheet 1</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="active campaigns this week">active campaigns this week</span><span class="nlp-chip" data-phrase="campaign tracker">campaign tracker</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>export --weekly Sheet 2</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="dip buy watchlist">dip buy watchlist</span><span class="nlp-chip" data-phrase="all the dip buys">all the dip buys</span><span class="nlp-chip" data-phrase="full dip list">full dip list</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>export --weekly Sheet 3</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="sector rotation this week">sector rotation this week</span><span class="nlp-chip" data-phrase="how did sectors move">how did sectors move</span><span class="nlp-chip" data-phrase="weekly sector performance">weekly sector performance</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>export --weekly Sheet 4</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-14">
+<div class="nlp-sec-hdr" style="border-left-color:#1a6e1a"><span class="nlp-sec-num">§14</span> Risk &amp; Conviction</div>
+<table class="nlp-table"><thead><tr><th>Phrase</th><th>→</th><th>EdgeOS Query / Field</th></tr></thead><tbody>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="high conviction">high conviction</span><span class="nlp-chip" data-phrase="strong setup">strong setup</span><span class="nlp-chip" data-phrase="A+ setup">A+ setup</span><span class="nlp-chip" data-phrase="top priority">top priority</span><span class="nlp-chip" data-phrase="best setup">best setup</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>multi-line confirmation present<br>Claude explains: &quot;XOM appears on multiple production lines...&quot;<br>B-C2 + B2 + B7 simultaneously = high conviction</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="low conviction">low conviction</span><span class="nlp-chip" data-phrase="weak setup">weak setup</span><span class="nlp-chip" data-phrase="mixed signals">mixed signals</span><span class="nlp-chip" data-phrase="contradictory signals">contradictory signals</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Claude notes contradiction tags:<br>&quot;Bear count still active while SCTR accelerating&quot;<br>&quot;Stage 4A headwind — verify catalyst&quot;</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="chase zone">chase zone</span><span class="nlp-chip" data-phrase="too extended to buy">too extended to buy</span><span class="nlp-chip" data-phrase="do not chase">do not chase</span><span class="nlp-chip" data-phrase="already extended">already extended</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>50ext_state = Extended or Exhausted<br>L_momo_gain_pct high<br>Claude presents but notes extension risk</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="low risk entry">low risk entry</span><span class="nlp-chip" data-phrase="good risk reward">good risk reward</span><span class="nlp-chip" data-phrase="tight entry">tight entry</span><span class="nlp-chip" data-phrase="clean entry">clean entry</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>basing = True near 50SMA<br>SATY trigger near current price<br>9below milestone just hit (dip buy entry day)</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="event risk">event risk</span><span class="nlp-chip" data-phrase="earnings coming">earnings coming</span><span class="nlp-chip" data-phrase="catalyst risk">catalyst risk</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Note to Claude: check earnings_date from instrument_master<br>Flag if within 2 weeks</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="thesis intact">thesis intact</span><span class="nlp-chip" data-phrase="still working">still working</span><span class="nlp-chip" data-phrase="setup still valid">setup still valid</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>show(ticker=X) and confirm signals still match qualifying criteria</code></td></tr>
+<tr class="nlp-row"><td class="nlp-phrases"><span class="nlp-chip" data-phrase="thesis broken">thesis broken</span><span class="nlp-chip" data-phrase="setup failed">setup failed</span><span class="nlp-chip" data-phrase="cut it">cut it</span></td><td class="nlp-arrow">→</td><td class="nlp-field"><code>Stage changed bearish OR<br>L_momo_ct reset to 0 OR<br>SATY crossed to bearish_triggered OR<br>9_13below_signal accelerated negatively</code></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-16">
+<div class="nlp-sec-hdr" style="border-left-color:#555"><span class="nlp-sec-num">§16</span> Paired Opposites — Bot Vocabulary</div>
+<table class="opp-table"><thead><tr><th class="opp-long-hdr">Long / Bullish</th><th>Field</th><th class="opp-vs-hdr">⇄</th><th class="opp-short-hdr">Short / Bearish</th><th>Field</th></tr></thead><tbody>
+<tr><td class="opp-long">party</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">hell</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>L_momo_active=True</code></td><td></td><td></td><td class="opp-short-f"><code>S_momo_active=True</code></td><td></td></tr>
+<tr><td class="opp-long">ignition</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">exhaustion</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>is_fresh_ignition</code></td><td></td><td></td><td class="opp-short-f"><code>is_at_exhaustion</code></td><td></td></tr>
+<tr><td class="opp-long">breakout</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">breakdown</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>STAGE=2A breakout</code></td><td></td><td></td><td class="opp-short-f"><code>STAGE=4A breakdown</code></td><td></td></tr>
+<tr><td class="opp-long">leaders</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">laggards</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>SCTR top</code></td><td></td><td></td><td class="opp-short-f"><code>SCTR bottom</code></td><td></td></tr>
+<tr><td class="opp-long">accumulation</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">distribution</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>Stage 1B</code></td><td></td><td></td><td class="opp-short-f"><code>2A advancing / Stage 3A/3B topping</code></td><td></td></tr>
+<tr><td class="opp-long">bull factory</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">bear factory</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>Bull_trade_factory</code></td><td></td><td></td><td class="opp-short-f"><code>Bear_trade_factory</code></td><td></td></tr>
+<tr><td class="opp-long">above 50</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">below 50</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>STAGE_abv50sma=True</code></td><td></td><td></td><td class="opp-short-f"><code>STAGE_abv50sma=False</code></td><td></td></tr>
+<tr><td class="opp-long">extended</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">room</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>50ext_state=Extended</code></td><td></td><td></td><td class="opp-short-f"><code>50ext_state=Room</code></td><td></td></tr>
+<tr><td class="opp-long">actionable</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">stalking</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>milestone reached today</code></td><td></td><td></td><td class="opp-short-f"><code>approaching milestone</code></td><td></td></tr>
+<tr><td class="opp-long">conviction</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">caution</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>multi-line confirmation</code></td><td></td><td></td><td class="opp-short-f"><code>contradiction tags present</code></td><td></td></tr>
+<tr><td class="opp-long">resurrection</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">collapse</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>SCTR neg→pos</code></td><td></td><td></td><td class="opp-short-f"><code>SCTR pos→neg</code></td><td></td></tr>
+<tr><td class="opp-long">campaign active</td><td></td><td class="opp-vs">⇄</td><td class="opp-short">campaign broken</td><td></td></tr>
+<tr class="opp-field-row"><td class="opp-long-f"><code>L_momo_trig IS NOT NULL</code></td><td></td><td></td><td class="opp-short-f"><code>9_13below_s_momo=True</code></td><td></td></tr>
+</tbody></table>
+</div>
+<div class="nlp-section" id="nlp-sec-17">
+<div class="nlp-sec-hdr" style="border-left-color:#bb0000"><span class="nlp-sec-num">§17</span> Claude's Response Rules</div>
+<div class="rules-grid">
+<div class="rules-col must-col"><div class="rules-col-title">MUST DO</div><div class="rule-item must-item"><span class="rule-n">1</span><span>Always query the database before responding</span></div><div class="rule-item must-item"><span class="rule-n">2</span><span>Always present actual field values from the database</span></div><div class="rule-item must-item"><span class="rule-n">3</span><span>Always explain WHAT the signals mean after showing them</span></div><div class="rule-item must-item"><span class="rule-n">4</span><span>Always use EdgeOS canonical terminology</span></div><div class="rule-item must-item"><span class="rule-n">5</span><span>If no results: &quot;No stocks match this criteria today&quot;</span></div><div class="rule-item must-item"><span class="rule-n">6</span><span>If stale data: &quot;Features last updated [date] — run pipeline for latest&quot;</span></div><div class="rule-item must-item"><span class="rule-n">7</span><span>For multi-line confirmation: explain which production lines agree</span></div><div class="rule-item must-item"><span class="rule-n">8</span><span>For contradictions: surface them with note tags</span></div><div class="rule-item must-item"><span class="rule-n">9</span><span>For teaching questions: teach using real current data as examples</span></div><div class="rule-item must-item"><span class="rule-n">10</span><span>Always end show() responses with actionable context</span></div></div>
+<div class="rules-col never-col"><div class="rules-col-title">MUST NEVER</div><div class="rule-item never-item"><span class="rule-n">1</span><span>Say &quot;I think XOM will go up&quot;</span></div><div class="rule-item never-item"><span class="rule-n">2</span><span>Invent a signal value not in the database</span></div><div class="rule-item never-item"><span class="rule-n">3</span><span>Say &quot;buy this&quot; or &quot;sell this&quot;</span></div><div class="rule-item never-item"><span class="rule-n">4</span><span>Compute SCTR, count, or stage independently</span></div><div class="rule-item never-item"><span class="rule-n">5</span><span>Make up a scan result when database returns none</span></div><div class="rule-item never-item"><span class="rule-n">6</span><span>Override naming convention with casual synonyms</span></div><div class="rule-item never-item"><span class="rule-n">7</span><span>Claim a stock is &quot;a good buy&quot; based on its own analysis</span></div><div class="rule-item never-item"><span class="rule-n">8</span><span>Act as portfolio manager, execution engine, or advisor</span></div></div>
+</div>
+<div class="fmt-block"><div class="fmt-title">Response Format Guidelines</div><pre class="fmt-pre">For regime() queries:
+  Lead with universe health
+  Then regime + factory modes
+  Then sector rotation table
+  Then brief Claude commentary on what this means
+
+For show(ticker) queries:
+  Lead with SCTR + Stage + Count
+  Then SATY state
+  Then which production lines qualify it
+  Then targets (TC or SATY)
+  Then any contradiction notes
+  Then brief plain-English summary
+
+For scan() queries:
+  Lead with count of results
+  Then ranked table
+  Then brief explanation of why these appear
+  Do NOT editorialize on individual names
+
+For teaching queries:
+  Use current real data as examples
+  Explain the deterministic logic
+  Reinforce Trade Factory vocabulary
+  Never speculate on outcomes</pre></div>
+</div>
+</div><!-- /.nlp-container -->
+</div><div class="tab-panel" id="panel-tags"><div class="tags-section"><div class="tags-sec-title tag-title-hl">HIGH CONVICTION TAGS (size up when present)</div>
+<div class="tags-grid">
+<div class="tag-row"><span class="tag-name tag-hl">tiger_in_tank</span><span class="tag-desc">gap up on volume — institutional demand signal</span></div>
+<div class="tag-row"><span class="tag-name tag-hl">volume_2x</span><span class="tag-desc">volume confirmation on breakout/breakdown</span></div>
+<div class="tag-row"><span class="tag-name tag-hl">mtf_4_aligned</span><span class="tag-desc">all 4 SATY modes agree</span></div>
+<div class="tag-row"><span class="tag-name tag-hl">momo_confirmed</span><span class="tag-desc">stage and momentum both firing</span></div>
+<div class="tag-row"><span class="tag-name tag-hl">count_1_fired</span><span class="tag-desc">ignition same day as dip milestone</span></div>
+<div class="tag-row"><span class="tag-name tag-hl">bear_regime_leader</span><span class="tag-desc">running while market is selling — AXTI Principle</span></div>
+<div class="tag-row"><span class="tag-name tag-hl">institutional_buying</span><span class="tag-desc">book-validated tag on Stage 2 pullbacks</span></div>
+<div class="tag-row"><span class="tag-name tag-hl">prior_long_camp_broken</span><span class="tag-desc">highest conviction short</span></div>
+</div></div>
+<div class="tags-section"><div class="tags-sec-title tag-title-warn">WARNING TAGS (reduce size or investigate)</div>
+<div class="tags-grid">
+<div class="tag-row"><span class="tag-name tag-warn">extension_warning</span><span class="tag-desc">50ext\_state = Extended or Exhausted</span></div>
+<div class="tag-row"><span class="tag-name tag-warn">late_stage_2</span><span class="tag-desc">long Stage 2 run, momentum may be aging</span></div>
+<div class="tag-row"><span class="tag-name tag-warn">deep_counter_active</span><span class="tag-desc">v3 &gt; 0, stock gave back launch zone</span></div>
+<div class="tag-row"><span class="tag-name tag-warn">failed_at_prior_support</span><span class="tag-desc">resistance holding</span></div>
+<div class="tag-row"><span class="tag-name tag-warn">base_forming_watch</span><span class="tag-desc">potential Stage 1A forming — exit shorts</span></div>
+</div></div>
+<div class="tags-section"><div class="tags-sec-title tag-title-mon">MONITORING TAGS (watch, not act)</div>
+<div class="tags-grid">
+<div class="tag-row"><span class="tag-name tag-mon">approaching_8</span><span class="tag-desc">count = 7, next bar may be exhaustion</span></div>
+<div class="tag-row"><span class="tag-name tag-mon">fresh_3a</span><span class="tag-desc">Stage 3A just fired — protect longs now</span></div>
+<div class="tag-row"><span class="tag-name tag-mon">s_momo_exhaustion</span><span class="tag-desc">short side approaching its own exhaustion</span></div>
+</div></div>
+<div class="tags-section">
+  <div class="tags-sec-title">Conviction Matrix — How Lines Combine</div>
+  <table class="conv-matrix">
+    <thead>
+      <tr><th>Lines Active</th><th>Conviction Level</th><th>Sizing Guidance</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1 line</td><td><span class="cv-low">Standard</span></td><td>Standard size. Single-line setups are valid but not exceptional.</td></tr>
+      <tr><td>2 lines</td><td><span class="cv-med">Elevated</span></td><td>Increase size 25–50%. Two independent frameworks agree.</td></tr>
+      <tr><td>3 lines</td><td><span class="cv-high">High</span></td><td>Size up. Three independent frameworks agree — rare and significant.</td></tr>
+      <tr><td>3 lines + HCT</td><td><span class="cv-max">Maximum</span></td><td>Maximum position size. Multi-line + high conviction tag. A+ setup.</td></tr>
+    </tbody>
+  </table>
+</div></div><div class="tab-panel" id="panel-discord"><div class="disc-intro">All commands prefixed with <code>@EdgeOS</code>. Identical to CLI/Chat — every filter available in the UI works here. Click any command to copy.</div>
+<div class="disc-groups">
+  <div class="disc-group" style="--dg-light:#0050b3;--dg-dark:#58a6ff">
+    <div class="disc-grp-title">Regime &amp; Tape</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS regime">@EdgeOS regime</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS regime today">@EdgeOS regime today</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS tape">@EdgeOS tape</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#1a6e1a;--dg-dark:#3fb950">
+    <div class="disc-grp-title">Single Ticker</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS show XOM">@EdgeOS show XOM</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS XOM">@EdgeOS XOM</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS XOM full">@EdgeOS XOM full</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#bb0000;--dg-dark:#f85149">
+    <div class="disc-grp-title">Party &amp; Hell (Momo)</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS party">@EdgeOS party</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS hell">@EdgeOS hell</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS who is running">@EdgeOS who is running</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS who is in hell">@EdgeOS who is in hell</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#1a6e1a;--dg-dark:#3fb950">
+    <div class="disc-grp-title">Ignitions</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS ignitions">@EdgeOS ignitions</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS fresh ignitions">@EdgeOS fresh ignitions</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS count 1s today">@EdgeOS count 1s today</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#0050b3;--dg-dark:#58a6ff">
+    <div class="disc-grp-title">Dip Buys</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS dips">@EdgeOS dips</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS dip buys">@EdgeOS dip buys</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS 9 below">@EdgeOS 9 below</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS 13 below">@EdgeOS 13 below</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#8a6000;--dg-dark:#e3b341">
+    <div class="disc-grp-title">Exhaustion</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS exhaustion">@EdgeOS exhaustion</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS at 9">@EdgeOS at 9</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS at 13">@EdgeOS at 13</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#1a6e1a;--dg-dark:#3fb950">
+    <div class="disc-grp-title">Velocity</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS velocity">@EdgeOS velocity</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS fast movers">@EdgeOS fast movers</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS resurrection">@EdgeOS resurrection</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#005a5a;--dg-dark:#1eb8b8">
+    <div class="disc-grp-title">Sectors</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS sectors">@EdgeOS sectors</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS sector leaders">@EdgeOS sector leaders</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS where is the party">@EdgeOS where is the party</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#8a6000;--dg-dark:#e3b341">
+    <div class="disc-grp-title">Campaigns &amp; Watchlist</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS campaigns">@EdgeOS campaigns</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS active campaigns">@EdgeOS active campaigns</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS watch">@EdgeOS watch</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS watchlist">@EdgeOS watchlist</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS watch add XOM">@EdgeOS watch add XOM</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS watch remove XOM">@EdgeOS watch remove XOM</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#1a6e1a;--dg-dark:#3fb950">
+    <div class="disc-grp-title">Morning &amp; Reports</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS briefing">@EdgeOS briefing</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS morning">@EdgeOS morning</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS export eod">@EdgeOS export eod</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS export weekly">@EdgeOS export weekly</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#0050b3;--dg-dark:#58a6ff">
+    <div class="disc-grp-title">Universe</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS universe">@EdgeOS universe</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS health">@EdgeOS health</button>
+    </div>
+  </div>
+  <div class="disc-group" style="--dg-light:#5a0070;--dg-dark:#bc8cff">
+    <div class="disc-grp-title">Teaching</div>
+    <div class="disc-cmds">
+        <button class="disc-cmd" data-phrase="@EdgeOS explain [term]">@EdgeOS explain [term]</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS what is [term]">@EdgeOS what is [term]</button>
+        <button class="disc-cmd" data-phrase="@EdgeOS teach me [concept]">@EdgeOS teach me [concept]</button>
+    </div>
+  </div>
+  </div>
+</div>
+</div>
+</div>
+  </main>
+
+</div><!-- /.content-row -->
+</div><!-- /.shell -->
+
+<div class="toast" id="toast"></div>
+<script>
+/* EdgeOS Master Reference — Interactive JS
+   Theme · Tabs · Sidebar · Search · Copy · Delegation */
+
+/* Theme: run before DOM to prevent flash */
+(function(){
+  var t = localStorage.getItem('eos-mr-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+
+function toggleTheme() {
+  var h = document.documentElement;
+  var n = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  h.setAttribute('data-theme', n);
+  localStorage.setItem('eos-mr-theme', n);
+  document.getElementById('themeBtn').textContent = n === 'dark' ? '☀ Light' : '☾ Dark';
+}
+
+/* Tab switching */
+var _tab = 'overview';
+function switchTab(id) {
+  _tab = id;
+  localStorage.setItem('eos-mr-tab', id);
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('panel-' + id);
+  var btn   = document.querySelector('[data-tab="' + id + '"]');
+  if (panel) panel.classList.add('active');
+  if (btn)   btn.classList.add('active');
+  /* Sidebar accent colour matches active tab */
+  var tabColors = {'overview':'#3fb950', 'lines':'#3fb950', 'regime':'#f85149', 'nlp':'#58a6ff', 'tags':'#e3b341', 'discord':'#bc8cff'};
+  var c = tabColors[id] || 'var(--blue)';
+  document.getElementById('sidebar').style.setProperty('--sb-active', c);
+  buildSidebar(id);
+  document.getElementById('mainPane').scrollTop = 0;
+  var s = document.getElementById('srch');
+  if (s && s.value) { s.value = ''; doSearch(''); }
+}
+
+/* Sidebar building */
+function buildSidebar(tabId) {
+  var sb = document.getElementById('sbContent');
+  if (!sb) return;
+  sb.innerHTML = '';
+  var mainPane = document.getElementById('mainPane');
+
+  function makeItem(el, text, num) {
+    var a = document.createElement('div');
+    a.className = 'sb-item';
+    a.innerHTML = (num ? '<span class="sb-item-num">' + escHtml(num) + '</span>' : '') +
+                  '<span>' + escHtml(text.slice(0,34)) + '</span>';
+    a.addEventListener('click', function() {
+      document.querySelectorAll('.sb-item').forEach(function(x){ x.classList.remove('active'); });
+      a.classList.add('active');
+      if (!el) return;
+      var mr = mainPane.getBoundingClientRect();
+      var tr = el.getBoundingClientRect();
+      mainPane.scrollTo({ top: mainPane.scrollTop + (tr.top - mr.top) - 10, behavior: 'smooth' });
+    });
+    return a;
+  }
+
+  var panel = document.getElementById('panel-' + tabId);
+  if (!panel) return;
+
+  if (tabId === 'nlp') {
+    // NLP has its own sidebar items
+    panel.querySelectorAll('.nlp-section').forEach(function(sec) {
+      var hdr = sec.querySelector('.nlp-sec-hdr');
+      if (!hdr) return;
+      var num = (hdr.querySelector('.nlp-sec-num') || {textContent:''}).textContent;
+      var txt = hdr.textContent.replace(num,'').trim();
+      sb.appendChild(makeItem(hdr, txt, num));
+    });
+    return;
+  }
+  if (tabId === 'lines') {
+    panel.querySelectorAll('.lines-section').forEach(function(sec, i) {
+      var hdr = sec.querySelector('.lines-sec-hdr');
+      if (!hdr) return;
+      sb.appendChild(makeItem(hdr, hdr.textContent.trim(), ''));
+    });
+    // Also add individual lines
+    var sep = document.createElement('div');
+    sep.style.cssText = 'height:1px;background:var(--border-l);margin:4px 0';
+    sb.appendChild(sep);
+    panel.querySelectorAll('.line-card').forEach(function(card) {
+      var code = (card.querySelector('.line-code')||{textContent:''}).textContent;
+      var name = (card.querySelector('.line-name')||{textContent:''}).textContent;
+      sb.appendChild(makeItem(card, name, code));
+    });
+    return;
+  }
+  if (tabId === 'regime') {
+    panel.querySelectorAll('.regime-section').forEach(function(sec) {
+      var hdr = sec.querySelector('.reg-sec-title');
+      if (!hdr) return;
+      sb.appendChild(makeItem(hdr, hdr.textContent.trim(), ''));
+    });
+    return;
+  }
+  if (tabId === 'tags') {
+    panel.querySelectorAll('.tags-section').forEach(function(sec) {
+      var hdr = sec.querySelector('.tags-sec-title');
+      if (!hdr) return;
+      sb.appendChild(makeItem(hdr, hdr.textContent.trim().replace(/TAGS.*/,'Tags'), ''));
+    });
+    return;
+  }
+  if (tabId === 'discord') {
+    panel.querySelectorAll('.disc-group').forEach(function(g) {
+      var hdr = g.querySelector('.disc-grp-title');
+      if (!hdr) return;
+      sb.appendChild(makeItem(hdr, hdr.textContent.trim(), ''));
+    });
+    return;
+  }
+  // overview: sections
+  panel.querySelectorAll('.ov-section').forEach(function(sec) {
+    var t = sec.querySelector('.ov-sec-title');
+    if (!t) return;
+    sb.appendChild(makeItem(t, t.textContent.trim().slice(0,38), ''));
+  });
+}
+
+/* Scroll tracking (passive) */
+function initScrollTracking() {
+  var mainPane = document.getElementById('mainPane');
+  if (!mainPane) return;
+  mainPane.addEventListener('scroll', function() {
+    var st = mainPane.scrollTop + 60;
+    var items = document.querySelectorAll('.sb-item');
+    if (!items.length) return;
+    // Find the heading most at top
+    var panel = document.getElementById('panel-' + _tab);
+    if (!panel) return;
+    var headings = Array.from(panel.querySelectorAll(
+      '.ov-sec-title,.lines-sec-hdr,.reg-sec-title,.nlp-sec-hdr,.tags-sec-title,.disc-grp-title,.line-card'
+    ));
+    var active = null;
+    headings.forEach(function(h) {
+      if (h.offsetTop <= st) active = h;
+    });
+    if (!active) return;
+    // Find matching sb-item — try text match
+    var activeText = (active.textContent||'').trim().slice(0,20).toLowerCase();
+    items.forEach(function(item) {
+      var match = item.textContent.trim().toLowerCase().indexOf(activeText) >= 0;
+      item.classList.toggle('active', match);
+    });
+  }, { passive: true });
+}
+
+/* Copy */
+function doCopy(el, text) {
+  var done = function() {
+    el.classList.add('copied');
+    showToast(text.length > 36 ? text.slice(0,34)+'…' : text);
+    setTimeout(function(){ el.classList.remove('copied'); }, 1400);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(function(){ fbCopy(text, done); });
+  } else { fbCopy(text, done); }
+}
+function fbCopy(text, cb) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  if (cb) cb();
+}
+function showToast(msg) {
+  var t = document.getElementById('toast'); if (!t) return;
+  t.textContent = '✓ ' + msg; t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+
+/* Event delegation — no inline onclick anywhere */
+function initDelegation() {
+  document.addEventListener('click', function(e) {
+    /* chip / nlp-chip */
+    var chip = e.target.closest('[data-phrase]');
+    if (chip && chip.dataset.phrase) { doCopy(chip, chip.dataset.phrase); return; }
+    /* disc-cmd */
+    var disc = e.target.closest('.disc-cmd');
+    if (disc) { doCopy(disc, disc.textContent.trim()); return; }
+    /* nlp-chip (has no data-phrase, text = phrase) */
+    var nlpc = e.target.closest('.nlp-chip');
+    if (nlpc) { doCopy(nlpc, nlpc.textContent.trim()); return; }
+  });
+}
+
+/* Search */
+var _stimer;
+function doSearch(val) {
+  val = (val || '').trim().toLowerCase();
+  var clr = document.getElementById('srch-clear');
+  if (clr) clr.style.display = val ? 'block' : 'none';
+  /* clear existing highlights */
+  document.querySelectorAll('mark.hl').forEach(function(m){ m.outerHTML = m.textContent; });
+  if (!val) { showNoRes(false); return; }
+  /* search only the active tab panel */
+  var panel = document.getElementById('panel-' + _tab);
+  if (!panel) return;
+  var walker = document.createTreeWalker(panel, NodeFilter.SHOW_TEXT, null, false);
+  var nodes = []; var n;
+  while ((n = walker.nextNode())) {
+    if (!n.textContent.toLowerCase().includes(val)) continue;
+    var p = n.parentNode;
+    if (!p || p.tagName === 'MARK') continue;
+    if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE') continue;
+    nodes.push(n);
+  }
+  nodes.forEach(function(n) {
+    var text = n.textContent, lower = text.toLowerCase(), idx = lower.indexOf(val);
+    if (idx < 0) return;
+    var frag = document.createDocumentFragment(), last = 0;
+    while (idx >= 0) {
+      frag.appendChild(document.createTextNode(text.slice(last, idx)));
+      var mark = document.createElement('mark'); mark.className = 'hl';
+      mark.textContent = text.slice(idx, idx + val.length);
+      frag.appendChild(mark);
+      last = idx + val.length; idx = lower.indexOf(val, last);
+    }
+    frag.appendChild(document.createTextNode(text.slice(last)));
+    try { n.parentNode.replaceChild(frag, n); } catch(e) {}
+  });
+  showNoRes(nodes.length === 0);
+}
+function showNoRes(show) {
+  /* no-results div in current panel */
+}
+
+/* Utils */
+function escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* Keyboard */
+function initKeyboard() {
+  document.addEventListener('keydown', function(e) {
+    if (e.target.matches('input,textarea')) return;
+    if (e.key === '/') { e.preventDefault(); var s=document.getElementById('srch'); if(s){s.focus();s.select();} }
+    if (e.key==='T'||e.key==='t') toggleTheme();
+  });
+  var srch = document.getElementById('srch');
+  if (srch) {
+    srch.addEventListener('input', function(){ clearTimeout(_stimer); _stimer=setTimeout(function(){doSearch(srch.value);},180); });
+    srch.addEventListener('keydown', function(e){ if(e.key==='Escape'){srch.value='';doSearch('');} });
+  }
+  var sclr = document.getElementById('srch-clear');
+  if (sclr) sclr.addEventListener('click', function(){ var s=document.getElementById('srch');if(s){s.value='';doSearch('');s.focus();} });
+}
+
+/* Tab buttons */
+function initTabButtons() {
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(){ switchTab(btn.dataset.tab); });
+  });
+}
+
+/* DOMContentLoaded — all init here */
+document.addEventListener('DOMContentLoaded', function() {
+  var theme = document.documentElement.getAttribute('data-theme');
+  document.getElementById('themeBtn').textContent = theme === 'dark' ? '☀ Light' : '☾ Dark';
+  initTabButtons();
+  initDelegation();
+  initScrollTracking();
+  initKeyboard();
+  /* Restore last tab or default overview */
+  var savedTab = localStorage.getItem('eos-mr-tab') || 'overview';
+  switchTab(savedTab);
+});
+</script>
+</body>
+</html>
